@@ -246,41 +246,74 @@ sSrcRest = bst_process('CallProcess', 'process_inverse_2018', sFilesRest, [], ..
          'SnrFixed',       3, ...
          'ComputeKernel',  1, ...
          'DataTypes',      {{'MEG'}}));
+%% downsample raw_notch_high_resampled to raw_notch_high_resampled_signal
+%% export sensor level raw_notch_high_resampled_signal to file
+%% in_bst_results to get source results
+%% export to file
+
+%% ===== Resample Raw ===
+
+% Process: Resample: 250Hz
+sFilesRestResample = bst_process('CallProcess', 'process_resample', sFilesRest, [], ...
+    'freq',     250, ...
+    'read_all', 1);
+
+% [ExportFile, sFileOut] = export_data(DataFile, ChannelMat, ExportFile, FileFormat)
+% [ExportFile, sFileOut] = export_data(DataFile, sFilesRestResample, ExportFile, FileFormat)
+% SUCCESS = file_copy(bst_fullfile(sFilesRest.F.filename), '.\result');
+% SUCCESS = file_copy(bst_fullfile(sFilesRestResample.F.filename), '.\result');
+
+%% get downsampled source signal
+
+% sSrcRest=in_bst_results(sFilesRest.FileName,LoadFull);
+% Results.ImageGridAmp = Results.ImagingKernel * DataMat.F(Results.GoodChannel, :);
+% file_copy(bst_fullfile(sSrcRest.F.filename), '.\result');
+
+% =in_bst_results(sFilesRest.FileName,LoadFull);
+
+sSrcRestResample=process_duplicate('DuplicateData',sSrcRest, '_resample');
+sSrcRestResample.DataFile=sFilesRestResample.F.filename;
+
+LoadFull=1;
+sSrcRestResampleSignal=in_bst_results(sFilesRestResample.FileName,LoadFull);
+
+% SUCCESS = file_copy(bst_fullfile(sFilesRestResample.F.filename), '.\result');
+% SUCCESS = file_copy(bst_fullfile(sSrcRestResampleSignal.F.filename), '.\result');
 
 
 %% ===== POWER MAPS =====
-% Process: Power spectrum density (Welch)
-sSrcPsd = bst_process('CallProcess', 'process_psd', sSrcRest, [], ...
-    'timewindow',  [0, 100], ...
-    'win_length',  4, ...
-    'win_overlap', 50, ...
-    'clusters',    {}, ...
-    'scoutfunc',   1, ...  % Mean
-    'edit',        struct(...
-         'Comment',         'Power,FreqBands', ...
-         'TimeBands',       [], ...
-         'Freqs',           {{'delta', '2, 4', 'mean'; 'theta', '5, 7', 'mean'; 'alpha', '8, 12', 'mean'; 'beta', '15, 29', 'mean'; 'gamma1', '30, 59', 'mean'; 'gamma2', '60, 90', 'mean'}}, ...
-         'ClusterFuncTime', 'none', ...
-         'Measure',         'power', ...
-         'Output',          'all', ...
-         'SaveKernel',      0));
+% % Process: Power spectrum density (Welch)
+% sSrcPsd = bst_process('CallProcess', 'process_psd', sSrcRest, [], ...
+%     'timewindow',  [0, 100], ...
+%     'win_length',  4, ...
+%     'win_overlap', 50, ...
+%     'clusters',    {}, ...
+%     'scoutfunc',   1, ...  % Mean
+%     'edit',        struct(...
+%          'Comment',         'Power,FreqBands', ...
+%          'TimeBands',       [], ...
+%          'Freqs',           {{'delta', '2, 4', 'mean'; 'theta', '5, 7', 'mean'; 'alpha', '8, 12', 'mean'; 'beta', '15, 29', 'mean'; 'gamma1', '30, 59', 'mean'; 'gamma2', '60, 90', 'mean'}}, ...
+%          'ClusterFuncTime', 'none', ...
+%          'Measure',         'power', ...
+%          'Output',          'all', ...
+%          'SaveKernel',      0));
+% 
+% % Process: Spectrum normalization
+% sSrcPsdNorm = bst_process('CallProcess', 'process_tf_norm', sSrcPsd, [], ...
+%     'normalize', 'relative', ...  % Relative power (divide by total power)
+%     'overwrite', 0);
+% 
+% % Process: Spatial smoothing (3.00)
+% sSrcPsdNorm = bst_process('CallProcess', 'process_ssmooth_surfstat', sSrcPsdNorm, [], ...
+%     'fwhm',      3, ...
+%     'overwrite', 1);
 
-% Process: Spectrum normalization
-sSrcPsdNorm = bst_process('CallProcess', 'process_tf_norm', sSrcPsd, [], ...
-    'normalize', 'relative', ...  % Relative power (divide by total power)
-    'overwrite', 0);
-
-% Process: Spatial smoothing (3.00)
-sSrcPsdNorm = bst_process('CallProcess', 'process_ssmooth_surfstat', sSrcPsdNorm, [], ...
-    'fwhm',      3, ...
-    'overwrite', 1);
-
-% Screen capture of final result
-hFig = view_surface_data([], sSrcPsdNorm.FileName);
-set(hFig, 'Position', [200 200 200 200]);
-hFigContact = view_contactsheet(hFig, 'freq', 'fig');
-bst_report('Snapshot', hFigContact, sSrcPsdNorm.FileName, 'Power');
-close([hFig, hFigContact]);
+% % Screen capture of final result
+% hFig = view_surface_data([], sSrcPsdNorm.FileName);
+% set(hFig, 'Position', [200 200 200 200]);
+% hFigContact = view_contactsheet(hFig, 'freq', 'fig');
+% bst_report('Snapshot', hFigContact, sSrcPsdNorm.FileName, 'Power');
+% close([hFig, hFigContact]);
 
 % Save and display report
 ReportFile = bst_report('Save', []);
@@ -288,6 +321,9 @@ bst_report('Open', ReportFile);
 % end
 
 %% export results
+% function varargout = process_convert_raw_to_lfp( varargin )
+% PROCESS_CONVERT_RAW_TO_LFP: Convert the ra    w signals after spike sorting
+ 
 %results_dSPM_MEG_KERNEL_190319_2029.mat
 % copyfile source file
 
@@ -321,5 +357,15 @@ bst_report('Open', ReportFile);
 % % singnal_source=in_bst_results(sSrcRest.FileName);
 % % isLoadFull=1;
 % % singnal_source=in_bst(sSrcRest.FileName, [], isLoadFull);
+
+
+
+
+LoadFull=1;
+
+singnal_source=in_bst_results(raw_notch_high_resampled.F.filename,LoadFull);
+Results.ImageGridAmp = Results.ImagingKernel * DataMat.F(Results.GoodChannel, :);
+
+
 
 save(['meg_source_',SubjectName,'.mat'],'singnal_source') 
