@@ -166,6 +166,12 @@ bst_process('CallProcess', 'process_snapshot', sFilesRest, [], ...
     'target',         2, ...  % SSP projectors
     'modality',       1);     % MEG (All)
 
+%% ===== Resample Raw ===
+
+% Process: Resample: 250Hz
+sFilesRestResample = bst_process('CallProcess', 'process_resample', sFilesRest, [], ...
+    'freq',     250, ...
+    'read_all', 1);
 
 %% ===== SOURCE ESTIMATION =====
 % Process: Select file names with tag: task-rest
@@ -184,6 +190,7 @@ bst_process('CallProcess', 'process_noisecov', sFilesNoise, [], ...
     'copycond',       1, ...
     'copysubj',       0, ...
     'replacefile',    1);  % Replace
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % % Process: Compute head model
 % bst_process('CallProcess', 'process_headmodel', sFilesRest, [], ...
@@ -191,12 +198,13 @@ bst_process('CallProcess', 'process_noisecov', sFilesNoise, [], ...
 %     'meg',         3);     % Overlapping spheres. ('';'meg_sphere';'Single sphere'; 'OpenMEEG BEM')
 
 % Process: Generate BEM surfaces
-sBemSurf = bst_process('CallProcess', 'process_generate_bem', sFilesRest, [], ...
+sBemSurf = bst_process('CallProcess', 'process_generate_bem', sFilesRestResample, [], ...
     'subjectname', SubjectName, ...
     'nscalp',      1922, ...%%%%8004
     'nouter',      1922, ...
     'ninner',      1922, ...
-    'thickness',   4);
+    'thickness',   4,...
+    'copycond',       1);
 
 
 % Process: Compute head model
@@ -222,19 +230,15 @@ sHeadmodel = bst_process('CallProcess', 'process_headmodel', sBemSurf, [], ...
          'isAdjoint',    0, ...
          'isAdaptative', 1, ...
          'isSplit',      0, ...
+         'copycond',       1, ...
          'SplitLength',  4000));
 
-%% ===== Resample Raw ===
 
-% Process: Resample: 250Hz
-sFilesRestResample = bst_process('CallProcess', 'process_resample', sFilesRest, [], ...
-    'freq',     250, ...
-    'read_all', 1);
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Process: Compute sources [2018] %% 2018 needs dspm2018
-sSrcRest = bst_process('CallProcess', 'process_inverse_2018', sFilesRestResample, [], ...
+sSrcRestResample = bst_process('CallProcess', 'process_inverse_2018', sFilesRestResample, [], ...
     'output',  2, ...  % Kernel only: one per file
     'inverse', struct(...
          'Comment',        'dSPM: MEG', ...
@@ -258,15 +262,44 @@ sSrcRest = bst_process('CallProcess', 'process_inverse_2018', sFilesRestResample
 %% export to file
 %% 
 % sSrcRestResample.DataFile=sFilesRestResample.FileName;
+% sSrcRestResampleSiganl=import_raw_to_db(sFileRestResample);
+% global GlobalData;
+% Get raw dataset
+% iDS = GetCurrentDataset();
+sFilesRestResampleSignalFile = import_raw_to_db(sFilesRestResample.FileName);
+sFilesRestResampleSignalFile=sFilesRestResampleSignalFile{1};
+% file_short( sFilesRestResampleSiganlFile)
+% sFilesRestResampleSignal=load(sFilesRestResampleSignalFile);
+sSrcRestResample.DataFile=file_short( sFilesRestResampleSiganlFile);
+bst_save(sSrcRestResample.FileName, sSrcRestResample, 'v6');
 
-LoadFull=1;
-sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,LoadFull);
+sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,1);
 
 
-% [ExportFile, sFileOut] = export_data(DataFile, ChannelMat, ExportFile, FileFormat)
-% [ExportFile, sFileOut] = export_data(DataFile, sFilesRestResample, ExportFile, FileFormat)
-% SUCCESS = file_copy(bst_fullfile(sFilesRest.F.filename), '.\result');
-% SUCCESS = file_copy(bst_fullfile(sFilesRestResample.F.filename), '.\result');
+%%
+% movefile(ImportedDataMat(iImported).FileName, finalImportedFile, 'f');
+
+%    bst_save(newFileName, DataMat, 'v6');
+   
+   
+   
+% [ResultsFile, DataFile] = file_resolve_link(sSrcRestResample.FileName);
+% Results = load(ResultsFile);
+% 
+% % sSrcRestResample.ImageGridAmp = Results.ImagingKernel * DataMat.F(Results.GoodChannel, :);
+% Results.ImageGridAmp = Results.ImagingKernel * DataMat.F(Results.GoodChannel, :);
+% 
+% % Results.ImageGridAmp = sSrcRestResample.ImagingKernel * DataMat.F(sSrcRestResample.GoodChannel, :);
+%         Results.ImageGridAmp = Results.ImagingKernel * DataMat.F(Results.GoodChannel, :);
+% 
+% % LoadFull=1;
+% % sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,LoadFull);
+% % 
+% 
+% % [ExportFile, sFileOut] = export_data(DataFile, ChannelMat, ExportFile, FileFormat)
+% % [ExportFile, sFileOut] = export_data(DataFile, sFilesRestResample, ExportFile, FileFormat)
+% % SUCCESS = file_copy(bst_fullfile(sFilesRest.F.filename), '.\result');
+% % SUCCESS = file_copy(bst_fullfile(sFilesRestResample.F.filename), '.\result');
 
 %% get downsampled source signal
 
