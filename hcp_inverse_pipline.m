@@ -26,7 +26,7 @@
 % =============================================================================@
 %
 % Author: Francois Tadel, 2017
-
+clear;clc;close all;
 tutorial_dir='F:\MEEGfMRI\Data\HCP_S900\';
 %% ===== FILES TO IMPORT =====
 % You have to specify the folder in which the tutorial dataset is unzipped
@@ -215,7 +215,7 @@ sHeadmodel = bst_process('CallProcess', 'process_headmodel', sBemSurf, [], ...
          'Method',        'adaptive', ...
          'nLayers',       17, ...
          'Reduction',     3, ...
-         'nVerticesInit', 4000, ...%%%%4002
+         'nVerticesInit', 8004, ...%%%%4002
          'Resolution',    0.005, ...
          'FileName',      []), ...
     'meg',         4, ...  % OpenMEEG BEM
@@ -261,23 +261,26 @@ sSrcRestResample = bst_process('CallProcess', 'process_inverse_2018', sFilesRest
 %% in_bst_results to get source results
 %% export to file
 %% 
-% sSrcRestResample.DataFile=sFilesRestResample.FileName;
-% sSrcRestResampleSiganl=import_raw_to_db(sFileRestResample);
-% global GlobalData;
-% Get raw dataset
-% iDS = GetCurrentDataset();
+Protocol = bst_get('Protocol', ProtocolName);
+
+ProtocolInfo = bst_get('ProtocolInfo');
+
+% Load
 sFilesRestResampleSignalFile = import_raw_to_db(sFilesRestResample.FileName);
 sFilesRestResampleSignalFile=sFilesRestResampleSignalFile{1};
-% file_short( sFilesRestResampleSiganlFile)
-% sFilesRestResampleSignal=load(sFilesRestResampleSignalFile);
-sSrcRestResample.DataFile=file_short( sFilesRestResampleSiganlFile);
-bst_save(sSrcRestResample.FileName, sSrcRestResample, 'v6');
+% Modify
+sFilesRestResampleSignal=sSrcRestResample;
+sFilesRestResampleSignal.DataFile=file_short( sFilesRestResampleSignalFile);
+% Save
+sSrcRestResampleSignalFile=bst_fullfile(ProtocolInfo.STUDIES,sFilesRestResampleSignal.FileName);
+% sSrcRestResampleSignalFile=strrep(sSrcRestResampleSignalFile,'.mat','_raw.mat');
+save(sSrcRestResampleSignalFile, '-struct', 'sFilesRestResampleSignal','-append');
+% Load
+sSrcRestResampleSignal=in_bst_results(sSrcRestResampleSignalFile,1);
 
-sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,1);
-
-
+db_reload_database(Protocol);
 %%
-% movefile(ImportedDataMat(iImported).FileName, finalImportedFile, 'f');
+% % movefile(ImportedDataMat(iImported).FileName, finalImportedFile, 'f');
 
 %    bst_save(newFileName, DataMat, 'v6');
    
@@ -342,11 +345,11 @@ sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,1);
 
 
 % db_reload_database(iProtocolGroup);
-Protocol = bst_get('Protocol', ProtocolName);
+
 % Reload output protocol
-db_reload_database(Protocol);
-% [sStudy, iStudy, iFile, fileType] = bst_get('AnyFile', srcFile);
-ProtocolInfo = bst_get('ProtocolInfo');
+% db_reload_database(Protocol);
+% % [sStudy, iStudy, iFile, fileType] = bst_get('AnyFile', srcFile);
+% ProtocolInfo = bst_get('ProtocolInfo');
 
 % srcFileFull = bst_fullfile(ProtocolInfo.STUDIES, sSrcRestResamplePath);
 %     fileMat = load(srcFileFull);
