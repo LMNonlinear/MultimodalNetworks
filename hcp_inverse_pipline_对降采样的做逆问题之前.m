@@ -198,7 +198,6 @@ sBemSurf = bst_process('CallProcess', 'process_generate_bem', sFilesRest, [], ..
     'ninner',      1922, ...
     'thickness',   4);
 
-
 % Process: Compute head model
 sHeadmodel = bst_process('CallProcess', 'process_headmodel', sBemSurf, [], ...
     'Comment',     '', ...
@@ -224,17 +223,12 @@ sHeadmodel = bst_process('CallProcess', 'process_headmodel', sBemSurf, [], ...
          'isSplit',      0, ...
          'SplitLength',  4000));
 
-%% ===== Resample Raw ===
 
-% Process: Resample: 250Hz
-sFilesRestResample = bst_process('CallProcess', 'process_resample', sFilesRest, [], ...
-    'freq',     250, ...
-    'read_all', 1);
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Process: Compute sources [2018] %% 2018 needs dspm2018
-sSrcRest = bst_process('CallProcess', 'process_inverse_2018', sFilesRestResample, [], ...
+sSrcRest = bst_process('CallProcess', 'process_inverse_2018', sFilesRest, [], ...
     'output',  2, ...  % Kernel only: one per file
     'inverse', struct(...
          'Comment',        'dSPM: MEG', ...
@@ -256,12 +250,13 @@ sSrcRest = bst_process('CallProcess', 'process_inverse_2018', sFilesRestResample
 %% export sensor level raw_notch_high_resampled_signal to file
 %% in_bst_results to get source results
 %% export to file
-%% 
-% sSrcRestResample.DataFile=sFilesRestResample.FileName;
 
-LoadFull=1;
-sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,LoadFull);
+%% ===== Resample Raw ===
 
+% Process: Resample: 250Hz
+sFilesRestResample = bst_process('CallProcess', 'process_resample', sFilesRest, [], ...
+    'freq',     250, ...
+    'read_all', 1);
 
 % [ExportFile, sFileOut] = export_data(DataFile, ChannelMat, ExportFile, FileFormat)
 % [ExportFile, sFileOut] = export_data(DataFile, sFilesRestResample, ExportFile, FileFormat)
@@ -289,21 +284,21 @@ sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,LoadFull);
 % sHeadmodelResamplePath=dir([resampledFolder,'\results_dSPM_MEG_*']);
 % sBemSurfResamplePath=dir([resampledFolder,'\results_dSPM_MEG_*']);
 % sSrcRestResamplePath=dir([resampledFolder,'\results_dSPM_MEG_*']);
-% 
-% % sBemSurfResample=sBemSurf;
-% sHeadmodelResample=sHeadmodel;
-% sSrcRestResample=sSrcRest;
-% sFilesRestResample=sFilesRest;
-% % sBemSurfResample.
-% % sHeadmodelResample.
-% 
-% % sSrcRestResample.DataFile=strrep(sSrcRestResample.DataFile,'.mat','_resample.mat');
-% sSrcRestResample.DataFile=sFilesRestResample.F.filename;
-% sSrcRestResample.HeadModelFile=strrep(sSrcRestResample.HeadModelFile,'.mat','_resample.mat');
-% % sFilesRestResample.F.filename=strrep(sFilesRestResample.F.filename,'_notch_high\','_notch_high_resample\');
-% 
-% bst_save(sSrcRestResample.HeadModelFile, sHeadmodelResample);
-% bst_save(sSrcRestResample.DataFile, sSrcRestResample);
+
+% sBemSurfResample=sBemSurf;
+sHeadmodelResample=sHeadmodel;
+sSrcRestResample=sSrcRest;
+sFilesRestResample=sFilesRest;
+% sBemSurfResample.
+% sHeadmodelResample.
+
+% sSrcRestResample.DataFile=strrep(sSrcRestResample.DataFile,'.mat','_resample.mat');
+sSrcRestResample.DataFile=sFilesRestResample.F.filename;
+sSrcRestResample.HeadModelFile=strrep(sSrcRestResample.HeadModelFile,'.mat','_resample.mat');
+% sFilesRestResample.F.filename=strrep(sFilesRestResample.F.filename,'_notch_high\','_notch_high_resample\');
+
+bst_save(sSrcRestResample.HeadModelFile, sHeadmodelResample);
+bst_save(sSrcRestResample.DataFile, sSrcRestResample);
 
 
 
@@ -318,10 +313,10 @@ ProtocolInfo = bst_get('ProtocolInfo');
 % srcFileFull = bst_fullfile(ProtocolInfo.STUDIES, sSrcRestResamplePath);
 %     fileMat = load(srcFileFull);
 % sSrcRestResample=load(srcFileFull);
-% % % % % % sSrcRestResample.DataFile=sFilesRestResample.FileName;
-% % % % % % 
-% % % % % % LoadFull=1;
-% % % % % % sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,LoadFull);
+sSrcRestResample.DataFile=sFilesRestResample.FileName;
+
+LoadFull=1;
+sSrcRestResampleSignal=in_bst_results(sSrcRestResample.FileName,LoadFull);
 
 % SUCCESS = file_copy(bst_fullfile(sFilesRestResample.F.filename), '.\result');
 % SUCCESS = file_copy(bst_fullfile(sSrcRestResampleSignal.F.filename), '.\result');
