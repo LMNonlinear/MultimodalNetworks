@@ -269,12 +269,12 @@ ProtocolInfo = bst_get('ProtocolInfo');
 sFilesRestResampleSignalFile = import_raw_to_db(sFilesRestResample.FileName);
 sFilesRestResampleSignalFile=sFilesRestResampleSignalFile{1};
 % Modify
-sFilesRestResampleSignal=sSrcRestResample;
-sFilesRestResampleSignal.DataFile=file_short( sFilesRestResampleSignalFile);
+sSrcRestResampleSignal=sSrcRestResample;
+sSrcRestResampleSignal.DataFile=file_short( sFilesRestResampleSignalFile);
 % Save
-sSrcRestResampleSignalFile=bst_fullfile(ProtocolInfo.STUDIES,sFilesRestResampleSignal.FileName);
+sSrcRestResampleSignalFile=bst_fullfile(ProtocolInfo.STUDIES,sSrcRestResampleSignal.FileName);
 % sSrcRestResampleSignalFile=strrep(sSrcRestResampleSignalFile,'.mat','_raw.mat');
-save(sSrcRestResampleSignalFile, '-struct', 'sFilesRestResampleSignal','-append');
+save(sSrcRestResampleSignalFile, '-struct', 'sSrcRestResampleSignal','-append');
 % Load
 sSrcRestResampleSignal=in_bst_results(sSrcRestResampleSignalFile,1);
 
