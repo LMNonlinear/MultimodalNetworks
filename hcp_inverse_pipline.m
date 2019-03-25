@@ -26,6 +26,7 @@
 % =============================================================================@
 %
 % Author: Francois Tadel, 2017
+% Modified by: Rigel 03/24/2019
 clear;clc;close all;
 tutorial_dir='F:\MEEGfMRI\Data\HCP_S900\';
 %% ===== FILES TO IMPORT =====
@@ -274,10 +275,19 @@ sSrcRestResampleSignal.DataFile=file_short( sFilesRestResampleSignalFile);
 % Save
 sSrcRestResampleSignalFile=bst_fullfile(ProtocolInfo.STUDIES,sSrcRestResampleSignal.FileName);
 % sSrcRestResampleSignalFile=strrep(sSrcRestResampleSignalFile,'.mat','_raw.mat');
-save(sSrcRestResampleSignalFile, '-struct', 'sSrcRestResampleSignal','-append');
+% save(sSrcRestResampleSignalFile, '-struct', 'sSrcRestResampleSignal','-append');
 % Load
 sSrcRestResampleSignal=in_bst_results(sSrcRestResampleSignalFile,1);
-SUCCESS = copyfile(bst_fullfile(sSrcRestResampleSignal.FileName), '.\result');
+% save(sSrcRestResampleSignalFile, '-struct', 'sSrcRestResampleSignal','-v7.3');
+% SUCCESS = copyfile(sSrcRestResampleSignalFile, '.\result');
+%%
+save('.\result\results_dSPM_MEG_KERNEL.mat', '-struct', 'sSrcRestResampleSignal','-v7.3');
+
+[SUCCESS,MSG] = copyfile(bst_fullfile(ProtocolInfo.SUBJECTS,sHeadmodel.SurfaceFile), '.\result');
+
+% save('.\result\meg_surfacefile.mat',sHeadmodel.SurfaceFile)
+
+%%
 db_reload_database(Protocol);
 
 % Save and display report
