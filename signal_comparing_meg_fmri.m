@@ -1,10 +1,10 @@
-clear;clc;
-close all;
+% clear;clc;
+% close all;
 %% FLAG
 FLAG_LOAD_SIGNAL=1;
 FLAG_LOAD_SURFACE=1;
-FLAG_DISPLAY=1;
-FLAG_DISPLAY_REULT=1;
+FLAG_DISPLAY=0;
+FLAG_DISPLAY_REULT=0;
 
 %%
 NUM_SUBJ=num2str(105923);
@@ -84,19 +84,22 @@ if FLAG_LOAD_SIGNAL==1 && FLAG_DISPLAY==1
 end
 %%
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+timeseries1=fmri.timeseries;
+timeseries2=meg.timeseries;
+clear fmri meg
 tic
 startmatlabpool
 parfor i=1:8004
-    parfor j=1:8004
+    for j=1:8004
         if j>=i
-            fmri.corrmat(i,j)=corr(fmri.timeseries(i,:)',fmri.timeseries(j,:)');
-            meg.corrmat(i,j)=corr(meg.timeseries(i,1:1200)',meg.timeseries(j,1:1200)');
+            corrmat1(i,j)=corr(timeseries1(i,:)',timeseries1(j,:)');
+            corrmat2(i,j)=corr(timeseries2(i,1:1200)',timeseries2(j,1:1200)');
         end
     end
 end
 closematlabpool
 toc
-
+save corrmat corrmat1 corrmat2
 
 
 
