@@ -1,6 +1,6 @@
 restoredefaultpath
 addpath(genpath('F:\MEEGfMRI\Data\ResamplingfMRIpipeline\external'));
-% addpath(genpath('.\external'));
+addpath(genpath('.\external'));
 %%
 % % addpath('F:\codes\spm12')
 % % % spm

@@ -85,14 +85,16 @@ end
 %%
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 tic
-for i=1:8004
-    for j=1:8004
+startmatlabpool
+parfor i=1:8004
+    parfor j=1:8004
         if j>=i
             fmri.corrmat(i,j)=corr(fmri.timeseries(i,:)',fmri.timeseries(j,:)');
             meg.corrmat(i,j)=corr(meg.timeseries(i,1:1200)',meg.timeseries(j,1:1200)');
         end
     end
 end
+closematlabpool
 toc
 
 
