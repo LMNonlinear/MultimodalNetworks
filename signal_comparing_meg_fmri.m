@@ -28,6 +28,7 @@ meg.surfpath='.\result\tess_cortex_mid.mat';
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% file_read
+tic
 if FLAG_LOAD_SIGNAL==1
     fmri.signal=niftiopen(fmri.signalpath);
     meg.signal=load(meg.signalpath);
@@ -44,10 +45,10 @@ if FLAG_LOAD_SURFACE==1
     meg.vertices=meg.surf.Vertices;
     meg.faces=meg.surf.Faces;
 end
-
+toc
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Figure
-if FLAG_LOAD_SIGNAL==1 && FLAG_DISPLAY==1;
+if FLAG_LOAD_SIGNAL==1 && FLAG_DISPLAY==1
     %% anatomical figure
     % axis equal
     % val=linspace(0,10,size(fmri.vertices,1))';
@@ -83,15 +84,16 @@ if FLAG_LOAD_SIGNAL==1 && FLAG_DISPLAY==1;
 end
 %%
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+tic
 for i=1:8004
     for j=1:8004
         if j>=i
             fmri.corrmat(i,j)=corr(fmri.timeseries(i,:)',fmri.timeseries(j,:)');
-            meg.corrmat(i,j)=corr(meg.timeseries(i,:)',meg.timeseries(j,:)');
+            meg.corrmat(i,j)=corr(meg.timeseries(i,1:1200)',meg.timeseries(j,1:1200)');
         end
     end
 end
-
+toc
 
 
 
