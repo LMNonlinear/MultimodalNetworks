@@ -3,14 +3,14 @@
 %% FLAG
 FLAG_LOAD_SIGNAL=1;
 FLAG_LOAD_SURFACE=1;
-FLAG_DISPLAY=1;
-FLAG_DISPLAY_REULT=1;
+FLAG_DISPLAY=0;
+FLAG_DISPLAY_REULT=0;
 
 %%
 NUM_SUBJ=num2str(105923);
 %% path
-% wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
-PATH_DATASET='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
+wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
+PATH_DATASET='F:\MEEGfMRI\Data\HCP_S900\';
 pipeline_path=mfilename('fullpath');
 % [pipeline_path, pipeline_name, ~] = fileparts(pipeline_path);
 
@@ -19,16 +19,10 @@ fmri.signalpath={'.\data\105923.rs.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii'..
     '.\data\105923.rs.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
 fmri.surfpath={[PATH_DATASET,NUM_SUBJ,'\MEG\anatomy\',NUM_SUBJ,'.L.midthickness.4k_fs_LR.surf.gii'],...
     [PATH_DATASET,NUM_SUBJ,'\MEG\anatomy\',NUM_SUBJ,'.R.midthickness.4k_fs_LR.surf.gii']};
-ciftiPath=[PATH_DATASET,NUM_SUBJ,'\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.dtseries.nii'];
-ciftiLabelPath='E:\Rigel\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.L.aparc.32k_fs_LR.label.gii';
+
 %% MEG source
-% meg_timefreq_hilbert=load('./result/timefreq_hilbert_190408_1541.mat');
-
-
-
-% meg.signalpath=dir('.\result\results_dSPM_MEG_KERNEL*.mat');
-% meg.signalpath=fullfile(meg.signalpath.folder,meg.signalpath.name);
-meg.signalpath='./result/timefreq_hilbert_190408_1541.mat';
+meg.signalpath=dir('.\result\results_dSPM_MEG_KERNEL*.mat');
+meg.signalpath=fullfile(meg.signalpath.folder,meg.signalpath.name);
 meg.surfpath='.\result\tess_cortex_mid.mat';
 
 
@@ -39,21 +33,17 @@ if FLAG_LOAD_SIGNAL==1
     fmri.signal=niftiopen(fmri.signalpath);
     meg.signal=load(meg.signalpath);
     fmri.timeseries=[fmri.signal{1};fmri.signal{2}];
-    %     meg.timeseries=meg.signal.ImageGridAmp;
-    meg.timeseries=meg.signal.TF;
-    %     gamma=meg_timefreq_hilbert.TF(:,:,5);
-    meg.timeseries=(abs(meg.timeseries)).^2;
+    meg.timeseries=meg.signal.ImageGridAmp;
+    
 end
 if FLAG_LOAD_SURFACE==1
-    fmri.surf=gifti(fmri.surfpath);    
+    fmri.surf=gifti(fmri.surfpath);
+    
     fmri.faces=[fmri.surf(1).faces; fmri.surf(2).faces+size(fmri.surf(1).vertices,1)];
     fmri.vertices=[fmri.surf(1).vertices; fmri.surf(2).vertices];
     meg.surf=load(meg.surfpath);
     meg.vertices=meg.surf.Vertices;
     meg.faces=meg.surf.Faces;
-    
-%     ciftiLabel = ft_read_cifti(ciftiLabelPath);
-    gifti=gifti(ciftiLabelPath);
 end
 toc
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,8 +66,8 @@ if FLAG_LOAD_SIGNAL==1 && FLAG_DISPLAY==1
         
         % val{1}=zscore(mean(fmri.timeseries,2));
         % val{2}=zscore(mean(meg.timeseries,2));
-        val{1}=zscore(fmri.timeseries(:,i+100));
-        val{2}=zscore(meg.timeseries(:,i+100,5));
+        val{1}=zscore(fmri.timeseries(:,i));
+        val{2}=zscore(meg.timeseries(:,i*1525));
         
         
         val{1}=(val{1}-min(val{1}))/(max(val{1})-min(val{1}));
@@ -94,46 +84,22 @@ if FLAG_LOAD_SIGNAL==1 && FLAG_DISPLAY==1
 end
 %%
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fmri_timeseries=fmri.timeseries;
-meg_timeseries=meg.timeseries;
-
-
-startmatlabpool
-% fmri_x=fmri_timeseries;
-% fmri_y=fmri_timeseries;
-% meg_x=meg_timeseries;
-% meg_y=meg_timeseries;
-% clearvars -except fmri_x fmri_y meg_x meg_y
+timeseries1=fmri.timeseries;
+timeseries2=meg.timeseries;
+clear fmri meg
 tic
-% fmri
+startmatlabpool
 parfor i=1:8004
     for j=1:8004
         if j>=i
-            
-            fmri_corrmat(i,j)=corr(fmri_timeseries(i,:)',fmri_timeseries(j,:)');
-            
-        end
-    end
-end
-%delta
-%theta
-%alpha
-%beta
-%gamma
-%gamma1
-%gamma2
-for iband=1:7
-    parfor i=1:8004
-        for j=1:8004
-            if j>=i
-                meg_corrmat(i,j,iband)=corr(meg_timeseries(i,:,iband)',meg_timeseries(j,:,iband)');
-            end
+            corrmat1(i,j)=corr(timeseries1(i,:)',timeseries1(j,:)');
+            corrmat2(i,j)=corr(timeseries2(i,1:1200)',timeseries2(j,1:1200)');
         end
     end
 end
 closematlabpool
 toc
-save corrmat fmri_corrmat meg_corrmat
+save corrmat corrmat1 corrmat2
 
 
 
