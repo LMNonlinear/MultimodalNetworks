@@ -1,5 +1,5 @@
 restoredefaultpath
-addpath(genpath('F:\MEEGfMRI\Data\ResamplingfMRIpipeline\external'));
+addpath(genpath('..\ResamplingfMRIpipeline\external'));
 addpath(genpath('.\external'));
 %%
 % % addpath('F:\codes\spm12')
@@ -9,9 +9,9 @@ addpath(genpath('.\external'));
 % % % spm('cmdline')
 % % spm('defaults','EEG')
 %% barinstorm
-addpath('F:\codes\brainstorm3')
+addpath('E:\Rigel\codes\brainstorm3')
 % brainstorm('nogui')
 brainstorm('setpath')
 %% fieldtrip
-addpath('F:\codes\fieldtrip-20161224')
-ft_defaults
+% addpath('E:\Rigel\codes\fieldtrip-20161224')
+% ft_defaults
