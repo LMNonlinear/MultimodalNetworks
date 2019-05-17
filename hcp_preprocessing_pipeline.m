@@ -31,7 +31,7 @@ clear;clc;close all;
 %%
 FLAG.NEWPROTOCAOL=1;
 FLAG.PREPROCESSING=1;
-FLAG.HEADMODEL=0;
+FLAG.HEADMODEL=1;
 FLAG.INVERSE=0;
 
 %%
@@ -89,8 +89,8 @@ if FLAG.PREPROCESSING==1;
         'channelalign', 1);
     
     %% ===== Segment Raw ===
-   sFilesRun1=sFilesRun1Raw;
-   sFilesNoise=sFilesNoiseRaw;
+%    sFilesRun1=sFilesRun1Raw;
+%    sFilesNoise=sFilesNoiseRaw;
     % Process: Import MEG/EEG: Time
 %     sFilesRun1 = bst_process('CallProcess', 'process_import_data_time', sFilesRun1Raw, [], ...
 %         'subjectname', SubjectName, ...
@@ -118,16 +118,16 @@ if FLAG.PREPROCESSING==1;
     
     %% ===== Resample Raw ===
     % Process: Resample: 250Hz
-    sFilesRun1Resample = bst_process('CallProcess', 'process_resample', sFilesRun1, [], ...
+    sFilesRun1Resample = bst_process('CallProcess', 'process_resample', sFilesRun1Raw, [], ...
         'freq',     250, ...
-        'read_all', 1);
+        'read_all', 0);
     
-    sFilesNoiseResample = bst_process('CallProcess', 'process_resample', sFilesNoise, [], ...
+    sFilesNoiseResample = bst_process('CallProcess', 'process_resample', sFilesNoiseRaw, [], ...
         'freq',     250, ...
-        'read_all', 1);
+        'read_all', 0);
     
-    bst_process('CallProcess', 'process_delete', [sFilesRun1, sFilesNoise], [], ...
-        'target', 1);  % Delete folders
+    bst_process('CallProcess', 'process_delete', [sFilesRun1Raw, sFilesNoiseRaw], [], ...
+        'target', 2);  % Delete folders
     sFilesRawResample = [sFilesRun1Resample, sFilesNoiseResample];
     
     %% ===== PRE-PROCESSING =====
@@ -173,7 +173,7 @@ if FLAG.PREPROCESSING==1;
     
     % Process: Delete folders
     bst_process('CallProcess', 'process_delete', [sFilesRawResample, sFilesNotch], [], ...
-        'target', 1);  % Delete file
+        'target', 2);  % Delete folder
     
     
     %% ===== ARTIFACT CLEANING =====
