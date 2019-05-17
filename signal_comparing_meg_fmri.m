@@ -9,10 +9,8 @@ FLAG_DISPLAY_REULT=1;
 %%
 NUM_SUBJ=num2str(105923);
 %% path
-% wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
 PATH_DATASET='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
 pipeline_path=mfilename('fullpath');
-% [pipeline_path, pipeline_name, ~] = fileparts(pipeline_path);
 
 %% fmri downsampled signal
 fmri.signalpath={'.\data\105923.rs.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii'...

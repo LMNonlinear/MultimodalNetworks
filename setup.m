@@ -1,6 +1,6 @@
 restoredefaultpath
-addpath(genpath('..\ResamplingfMRIpipeline\external'));
-addpath(genpath('.\external'));
+% addpath(genpath('..\ResamplingfMRIpipeline\external'));
+% addpath(genpath('.\external'));
 %%
 % % addpath('F:\codes\spm12')
 % % % spm
@@ -9,9 +9,20 @@ addpath(genpath('.\external'));
 % % % spm('cmdline')
 % % spm('defaults','EEG')
 %% barinstorm
-addpath('E:\Rigel\codes\brainstorm3')
+addpath('D:\codes\brainstorm\brainstorm_190516\brainstorm3')
 % brainstorm('nogui')
 brainstorm('setpath')
 %% fieldtrip
 % addpath('E:\Rigel\codes\fieldtrip-20161224')
 % ft_defaults
+
+
+%%
+tutorial_dir='M:\MEEGfMRI\Data\HCP_S900\';
+
+%%
+filename = './temp/config.mat';
+save(filename)
+
+
+

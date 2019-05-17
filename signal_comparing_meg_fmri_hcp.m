@@ -1,3 +1,6 @@
+%% 
+%use hcp data source signal
+
 clear;clc;
 close all;
 %% FLAG
