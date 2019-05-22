@@ -1,11 +1,11 @@
-% function tutorial_hcp_s900(tutorial_dir)
+% function tutorial_hcp_s900(data_dir)
 % TUTORIAL_HCP: Script that reproduces the results of the online tutorial "Human Connectome Project: Resting-state MEG".
 %
 % CORRESPONDING ONLINE TUTORIALS:
 %     https://neuroimage.usc.edu/brainstorm/Tutorials/HCP-MEG
 %
 % INPUTS:
-%     tutorial_dir: Directory where the HCP files have been unzipped
+%     data_dir: Directory where the HCP files have been unzipped
 
 % @=============================================================================
 % This function is part of the Brainstorm software:
@@ -42,20 +42,20 @@ FLAG.READRESULT=1;
 %% ===== FILES TO IMPORT =====
 if FLAG.RELOAD==1
     % You have to specify the folder in which the tutorial dataset is unzipped
-    % if (nargin == 0) || isempty(tutorial_dir) || ~file_exist(tutorial_dir)
-    if isempty(tutorial_dir) || ~file_exist(tutorial_dir)
+    % if (nargin == 0) || isempty(data_dir) || ~file_exist(data_dir)
+    if isempty(data_dir) || ~file_exist(data_dir)
         error('The first argument must be the full path to the tutorial dataset folder.');
     end
     % Subject name
     SubjectName = '105923';
     
     % Build the path of the files to import
-    AnatDir    = fullfile(tutorial_dir, SubjectName, 'MEG', 'anatomy');
-    Run1File   = fullfile(tutorial_dir, SubjectName, 'unprocessed', 'MEG', '3-Restin', '4D', 'c,rfDC');
-    NoiseFile  = fullfile(tutorial_dir, SubjectName, 'unprocessed', 'MEG', '1-Rnoise', '4D', 'c,rfDC');
+    AnatDir    = fullfile(data_dir, SubjectName, 'MEG', 'anatomy');
+    Run1File   = fullfile(data_dir, SubjectName, 'unprocessed', 'MEG', '3-Restin', '4D', 'c,rfDC');
+    NoiseFile  = fullfile(data_dir, SubjectName, 'unprocessed', 'MEG', '1-Rnoise', '4D', 'c,rfDC');
     % Check if the folder contains the required files
     if ~file_exist(AnatDir) || ~file_exist(Run1File) || ~file_exist(NoiseFile)
-        error(['The folder ' tutorial_dir ' does not contain subject #105923 from the HCP-MEG distribution.']);
+        error(['The folder ' data_dir ' does not contain subject #105923 from the HCP-MEG distribution.']);
     end
 end
 %% ===== CREATE PROTOCOL =====
@@ -150,7 +150,7 @@ if FLAG.INVERSE==1
 end
 %% === Read Results===
 if FLAG.READRESULT==1
-    [Results, ResultsFile]=in_bst_results(sSrcRestKernel.FileName, 1);
+    [sSrcResults, sSrcResultsFile]=in_bst_results(sSrcRestKernel.FileName, 1);
 end
 %%
 % Save and display report

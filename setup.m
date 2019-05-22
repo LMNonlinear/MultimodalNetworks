@@ -15,11 +15,8 @@ brainstorm('setpath')
 %% fieldtrip
 % addpath('E:\Rigel\codes\fieldtrip-20161224')
 % ft_defaults
-
-
 %%
-tutorial_dir='M:\MEEGfMRI\Data\HCP_S900\';
-
+data_dir='M:\MEEGfMRI\Data\HCP_S900\';
 %%
 filename = './temp/config.mat';
 save(filename)
