@@ -1,40 +1,24 @@
-% function tutorial_hcp_s900(data_dir)
-% TUTORIAL_HCP: Script that reproduces the results of the online tutorial "Human Connectome Project: Resting-state MEG".
-%
-% CORRESPONDING ONLINE TUTORIALS:
-%     https://neuroimage.usc.edu/brainstorm/Tutorials/HCP-MEG
-%
-% INPUTS:
+function varargout=fun_hcp_preprocessing_pipeline(varargin)
+%% INPUTS:
 %     data_dir: Directory where the HCP files have been unzipped
-
-% @=============================================================================
-% This function is part of the Brainstorm software:
-% https://neuroimage.usc.edu/brainstorm
-%
-% Copyright (c)2000-2018 University of Southern California & McGill University
-% This software is distributed under the terms of the GNU General Public License
-% as published by the Free Software Foundation. Further details on the GPLv3
-% license can be found at http://www.gnu.org/copyleft/gpl.html.
-%
-% FOR RESEARCH PURPOSES ONLY. THE SOFTWARE IS PROVIDED "AS IS," AND THE
-% UNIVERSITY OF SOUTHERN CALIFORNIA AND ITS COLLABORATORS DO NOT MAKE ANY
-% WARRANTY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
-% MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, NOR DO THEY ASSUME ANY
-% LIABILITY OR RESPONSIBILITY FOR THE USE OF THIS SOFTWARE.
-%
-% For more information type "brainstorm license" at command prompt.
-% =============================================================================@
-%
-% Author: Francois Tadel, 2017
-% Modified by: Rigel 03/24/2019
-%%
-% clear;clc;close all;
-%%
-load ./temp/config.mat
-%%
+%% default flag
 FLAG.NEWPROTOCAOL=1;
 FLAG.PREPROCESSING=1;
 FLAG.HEADMODEL=1;
+%% read vaiable input
+switch nargin
+    case 1
+        load ./temp/config.mat
+    case 3
+        ProtocolName=varargin{1};
+        data_dir=varargin{2};
+        SubjectName=varargin{3};
+    case 4
+        ProtocolName=varargin{1};
+        data_dir=varargin{2};
+        SubjectName=varargin{3};
+        FLAG=varargin{4};
+end
 %%
 % data_dir='M:\MEEGfMRI\Data\HCP_S900\';
 %% ===== FILES TO IMPORT =====
@@ -44,7 +28,7 @@ if isempty(data_dir) || ~file_exist(data_dir)
     error('The first argument must be the full path to the tutorial dataset folder.');
 end
 % Subject name
-SubjectName = '105923';
+% SubjectName = '105923';
 % Build the path of the files to import
 AnatDir    = fullfile(data_dir, SubjectName, 'MEG', 'anatomy');
 Run1File   = fullfile(data_dir, SubjectName, 'unprocessed', 'MEG', '3-Restin', '4D', 'c,rfDC');
@@ -55,7 +39,7 @@ if ~file_exist(AnatDir) || ~file_exist(Run1File) || ~file_exist(NoiseFile)
 end
 %% ===== CREATE PROTOCOL =====
 % The protocol name has to be a valid folder name (no spaces, no weird characters...)
-ProtocolName = 'HCPsLoretaPsdBandsPipeline';
+% ProtocolName = 'HCPsLoretaPsdBandsPipeline';
 % Start brainstorm without the GUI
 if ~brainstorm('status')
     brainstorm nogui
@@ -236,12 +220,48 @@ if FLAG.HEADMODEL==1
         'copycond',       1, ...
         'SplitLength',  4000));
 end
-%%
-% Save and display report
-ReportFile = bst_report('Save', []);
-bst_report('Open', ReportFile);
-% end
-%%
+
+%% SAVE RESULTS
+% save head model
+[sHeadmodelFileName,sHeadmodelType, sHeadmodelisAnatomy] = file_fullpath( sHeadmodel.FileName );
+[sHeadmodelPath, name, ext]=sHeadmodelFileName;
+file_copy(sHeadmodelPath,['.\result\',SubjectName]);
+% save signal
+sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFilesRest, [], ...
+    'subjectname', SubjectName, ...
+    'condition',   '', ...
+    'timewindow',  [], ...
+    'split',       0, ...
+    'ignoreshort', 0, ...
+    'usectfcomp',  0, ...
+    'usessp',      0, ...
+    'freq',        [], ...
+    'baseline',    []);
+
+[sFilesRestFileName,sFilesRestFileType, sFilesRestisAnatomy] = file_fullpath( sFilesRest.FileName );
+[sFilesRestFilePath, name, ext]=sFilesRestFileName;
+file_copy(sFilesRestFilePath,['.\result\',SubjectName]);
+
+% Process: Delete folders
+bst_process('CallProcess', 'process_delete', sFilesRestImported, [], ...
+    'target', 2);  % Delete folder
+
+% save workspace
 filename = './temp/hcp_preprocessing_pipeline.mat';
 clear ans
 save(filename)
+
+% output
+switch nargout
+    case 1
+        varargout{1}=sHeadmodel;
+    case 2
+        varargout{1}=sHeadmodel;
+        varargout{2}=sFilesRest;
+end
+
+%%
+% Save and display report
+ReportFile = bst_report('Save', []);
+% bst_report('Open', ReportFile);
+% end

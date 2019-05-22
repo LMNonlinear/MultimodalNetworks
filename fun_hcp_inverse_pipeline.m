@@ -1,43 +1,31 @@
-% function tutorial_hcp_s900(data_dir)
-% TUTORIAL_HCP: Script that reproduces the results of the online tutorial "Human Connectome Project: Resting-state MEG".
-%
-% CORRESPONDING ONLINE TUTORIALS:
-%     https://neuroimage.usc.edu/brainstorm/Tutorials/HCP-MEG
-%
-% INPUTS:
+function varargout= fun_hcp_inverse_pipeline(varargin)
+%% INPUTS:
 %     data_dir: Directory where the HCP files have been unzipped
-
-% @=============================================================================
-% This function is part of the Brainstorm software:
-% https://neuroimage.usc.edu/brainstorm
-%
-% Copyright (c)2000-2018 University of Southern California & McGill University
-% This software is distributed under the terms of the GNU General Public License
-% as published by the Free Software Foundation. Further details on the GPLv3
-% license can be found at http://www.gnu.org/copyleft/gpl.html.
-%
-% FOR RESEARCH PURPOSES ONLY. THE SOFTWARE IS PROVIDED "AS IS," AND THE
-% UNIVERSITY OF SOUTHERN CALIFORNIA AND ITS COLLABORATORS DO NOT MAKE ANY
-% WARRANTY, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
-% MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, NOR DO THEY ASSUME ANY
-% LIABILITY OR RESPONSIBILITY FOR THE USE OF THIS SOFTWARE.
-%
-% For more information type "brainstorm license" at command prompt.
-% =============================================================================@
-%
-% Author: Francois Tadel, 2017
-% Modified by: Rigel 03/24/2019
-%%
-% clear;clc;close all;
-%%
-load ./temp/config.mat
-load ./temp/hcp_preprocessing_pipeline.mat
-%%
+%% default flag
 FLAG.RELOAD=0;
 FLAG.NEWPROTOCAOL=0;
 FLAG.SAMPLE=1;
 FLAG.INVERSE=1;
 FLAG.READRESULT=1;
+%% read vaiable input
+switch nargin
+    case 1
+        load ./temp/config.mat
+        load ./temp/hcp_preprocessing_pipeline.mat
+    case 3
+        ProtocolName=varargin{1};
+        data_dir=varargin{2};
+        SubjectName=varargin{3};
+        load ./temp/hcp_preprocessing_pipeline.mat
+    case 4
+        ProtocolName=varargin{1};
+        data_dir=varargin{2};
+        SubjectName=varargin{3};
+        FLAG=varargin{4};
+        load ./temp/hcp_preprocessing_pipeline.mat
+end
+
+
 %% ===== FILES TO IMPORT =====
 if FLAG.RELOAD==1
     % You have to specify the folder in which the tutorial dataset is unzipped
@@ -46,7 +34,7 @@ if FLAG.RELOAD==1
         error('The first argument must be the full path to the tutorial dataset folder.');
     end
     % Subject name
-    SubjectName = '105923';    
+    %     SubjectName = '105923';
     % Build the path of the files to import
     AnatDir    = fullfile(data_dir, SubjectName, 'MEG', 'anatomy');
     Run1File   = fullfile(data_dir, SubjectName, 'unprocessed', 'MEG', '3-Restin', '4D', 'c,rfDC');
@@ -58,7 +46,7 @@ if FLAG.RELOAD==1
 end
 %% ===== CREATE PROTOCOL =====
 % The protocol name has to be a valid folder name (no spaces, no weird characters...)
-ProtocolName = 'HCPsLoretaPsdBandsPipeline';
+% ProtocolName = 'HCPsLoretaPsdBandsPipeline';
 % Start brainstorm without the GUI
 if ~brainstorm('status')
     brainstorm nogui
@@ -150,12 +138,20 @@ end
 if FLAG.READRESULT==1
     [sSrcResults, sSrcResultsFile]=in_bst_results(sSrcRestKernel.FileName, 1);
 end
+
+%%
+filename = './temp/hcp_inverse_pipeline.mat';
+clear ans
+save(filename)
+switch nargout
+    case 1
+        varargout{1}=sSrcResults;
+    case 2
+        varargout{1}=sSrcResults;
+        varargout{2}=sSrcResultsFile;
+end
 %%
 % Save and display report
 ReportFile = bst_report('Save', []);
-bst_report('Open', ReportFile);
+% bst_report('Open', ReportFile);
 % end
-%%
-filename = './temp/hcp_inverse_pipeline.mat';
-clear ans 
-save(filename)

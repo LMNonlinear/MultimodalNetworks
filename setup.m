@@ -15,8 +15,10 @@ brainstorm('setpath')
 %% fieldtrip
 % addpath('E:\Rigel\codes\fieldtrip-20161224')
 % ft_defaults
-%%
+%% default demo para
+ProtocolName='HCPPipeline';
 data_dir='M:\MEEGfMRI\Data\HCP_S900\';
+SubjectName = '105923';
 %%
 filename = './temp/config.mat';
 save(filename)
