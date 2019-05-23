@@ -9,7 +9,8 @@ restoredefaultpath
 % % % spm('cmdline')
 % % spm('defaults','EEG')
 %% barinstorm
-addpath('E:\Rigel\codes\brainstorm3')
+% addpath('E:\Rigel\codes\brainstorm3')
+addpath('D:\codes\brainstorm\brainstorm_190516\brainstorm3')
 % brainstorm('nogui')
 brainstorm('setpath')
 %% fieldtrip
@@ -17,7 +18,8 @@ brainstorm('setpath')
 % ft_defaults
 %% default demo para
 ProtocolName='HCPPipeline';
-data_dir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
+% data_dir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
+data_dir='M:\MEEGfMRI\Data\HCP_S900';
 SubjectName = '105923';
 %%
 filename = './temp/config.mat';

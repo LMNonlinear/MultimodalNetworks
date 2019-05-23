@@ -1,13 +1,6 @@
 function varargout= fun_hcp_inverse_pipeline(varargin)
 %% INPUTS:
 %     data_dir: Directory where the HCP files have been unzipped
-%% default flag
-FLAG.RELOAD=0;
-FLAG.NEWPROTOCAOL=0;
-FLAG.SAMPLE=1;
-FLAG.INVERSE=1;
-FLAG.READRESULT=1;
-%%
 %%
 timeWindow=[0,100];
 %% read vaiable input
@@ -31,23 +24,24 @@ switch nargin
         FLAG.INVERSE=1;
         FLAG.READRESULT=1;
     case 4
+        load ./temp/hcp_preprocessing_pipeline.mat
         ProtocolName=varargin{1};
         data_dir=varargin{2};
         SubjectName=varargin{3};
         timeWindow=varargin{4};
-        load ./temp/hcp_preprocessing_pipeline.mat
         FLAG.RELOAD=0;
         FLAG.NEWPROTOCAOL=0;
         FLAG.SAMPLE=1;
         FLAG.INVERSE=1;
         FLAG.READRESULT=1;
     case 5
+        load ./temp/hcp_preprocessing_pipeline.mat
         ProtocolName=varargin{1};
         data_dir=varargin{2};
         SubjectName=varargin{3};
         FLAG=varargin{4};
         timeWindow=varargin{5};
-        load ./temp/hcp_preprocessing_pipeline.mat
+        
 end
 
 
@@ -168,8 +162,9 @@ if FLAG.READRESULT==1
     %     [sSrcRestKernelPath, name, ext]=bst_fileparts(sSrcRestKernelFileName);
     %     [sSrcRestKernelFolder, name, ext]=bst_fileparts(sSrcRestKernelPath);
     %     file_copy(sSrcRestKernelFolder,['.\result\',SubjectName]);
+    ProtocolInfo=bst_get('ProtocolInfo');
     [ProtocolFolder, name, ext]=bst_fileparts(ProtocolInfo.STUDIES);
-    file_copy(ProtocolFolder,['.\result\']);
+    file_copy(ProtocolFolder,['.\result\',ProtocolInfo.Comment]);
 end
 
 %%

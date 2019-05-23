@@ -245,7 +245,7 @@ sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFil
 %copy all
     ProtocolInfo=bst_get('ProtocolInfo');
     [ProtocolFolder, name, ext]=bst_fileparts(ProtocolInfo.STUDIES);
-    file_copy(ProtocolFolder,['.\result\']);
+    file_copy(ProtocolFolder,['.\result\',ProtocolInfo.Comment]);
     
 % Process: Delete folders/ imported is unuseful for next steps in pipeline, but we can make a backup
 bst_process('CallProcess', 'process_delete', sFilesRestImported, [], ...
