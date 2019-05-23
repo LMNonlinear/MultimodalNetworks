@@ -7,6 +7,9 @@ FLAG.NEWPROTOCAOL=0;
 FLAG.SAMPLE=1;
 FLAG.INVERSE=1;
 FLAG.READRESULT=1;
+%%
+%%
+timeWindow=[0,100];
 %% read vaiable input
 switch nargin
     case 1
@@ -21,7 +24,14 @@ switch nargin
         ProtocolName=varargin{1};
         data_dir=varargin{2};
         SubjectName=varargin{3};
+        timeWindow=varargin{4};
+        load ./temp/hcp_preprocessing_pipeline.mat
+    case 5
+        ProtocolName=varargin{1};
+        data_dir=varargin{2};
+        SubjectName=varargin{3};
         FLAG=varargin{4};
+        timeWindow=varargin{5};
         load ./temp/hcp_preprocessing_pipeline.mat
 end
 
@@ -66,7 +76,7 @@ if FLAG.SAMPLE==1
     sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFilesRest, [], ...
         'subjectname', SubjectName, ...
         'condition',   '', ...
-        'timewindow',  [0, 100], ...% avoid bound effect, we will only use 30-60
+        'timewindow',  [timeWindow(1), timeWindow(2)], ...% avoid bound effect, we will only use 30-60
         'split',       0, ...
         'ignoreshort', 0, ...
         'usectfcomp',  0, ...
@@ -139,10 +149,10 @@ if FLAG.READRESULT==1
     % save source space signal
     [sSrcResults, sSrcResultsFile]=in_bst_results(sSrcRestKernel.FileName, 1);
     % save all
-%     [sSrcRestKernelFileName,sSrcRestKernelType, sSrcRestKernelisAnatomy] = file_fullpath( sSrcRestKernel.FileName );
-%     [sSrcRestKernelPath, name, ext]=bst_fileparts(sSrcRestKernelFileName);
-%     [sSrcRestKernelFolder, name, ext]=bst_fileparts(sSrcRestKernelPath);
-%     file_copy(sSrcRestKernelFolder,['.\result\',SubjectName]);
+    %     [sSrcRestKernelFileName,sSrcRestKernelType, sSrcRestKernelisAnatomy] = file_fullpath( sSrcRestKernel.FileName );
+    %     [sSrcRestKernelPath, name, ext]=bst_fileparts(sSrcRestKernelFileName);
+    %     [sSrcRestKernelFolder, name, ext]=bst_fileparts(sSrcRestKernelPath);
+    %     file_copy(sSrcRestKernelFolder,['.\result\',SubjectName]);
     [ProtocolFolder, name, ext]=bst_fileparts(ProtocolInfo.STUDIES);
     file_copy(ProtocolFolder,['.\result\']);
 end
