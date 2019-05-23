@@ -136,7 +136,15 @@ if FLAG.INVERSE==1
 end
 %% === Read Results===
 if FLAG.READRESULT==1
+    % save source space signal
     [sSrcResults, sSrcResultsFile]=in_bst_results(sSrcRestKernel.FileName, 1);
+    % save all
+%     [sSrcRestKernelFileName,sSrcRestKernelType, sSrcRestKernelisAnatomy] = file_fullpath( sSrcRestKernel.FileName );
+%     [sSrcRestKernelPath, name, ext]=bst_fileparts(sSrcRestKernelFileName);
+%     [sSrcRestKernelFolder, name, ext]=bst_fileparts(sSrcRestKernelPath);
+%     file_copy(sSrcRestKernelFolder,['.\result\',SubjectName]);
+    [ProtocolFolder, name, ext]=bst_fileparts(ProtocolInfo.STUDIES);
+    file_copy(ProtocolFolder,['.\result\']);
 end
 
 %%

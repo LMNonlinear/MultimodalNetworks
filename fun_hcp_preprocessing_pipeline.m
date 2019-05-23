@@ -222,10 +222,10 @@ if FLAG.HEADMODEL==1
 end
 
 %% SAVE RESULTS
-% save head model
-[sHeadmodelFileName,sHeadmodelType, sHeadmodelisAnatomy] = file_fullpath( sHeadmodel.FileName );
-[sHeadmodelPath, name, ext]=bst_fileparts(sHeadmodelFileName);
-file_copy(sHeadmodelPath,['.\result\',SubjectName]);
+% % save head model
+% [sHeadmodelFileName,sHeadmodelType, sHeadmodelisAnatomy] = file_fullpath( sHeadmodel.FileName );
+% [sHeadmodelPath, name, ext]=bst_fileparts(sHeadmodelFileName);
+% file_copy(sHeadmodelPath,['.\result\',SubjectName]);
 % save signal
 sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFilesRest, [], ...
     'subjectname', SubjectName, ...
@@ -238,11 +238,16 @@ sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFil
     'freq',        [], ...
     'baseline',    []);
 
-[sFilesRestFileName,sFilesRestFileType, sFilesRestisAnatomy] = file_fullpath( sFilesRest.FileName );
-[sFilesRestFilePath, name, ext]=bst_fileparts(sFilesRestFileName);
-file_copy(sFilesRestFilePath,['.\result\',SubjectName]);
+% [sFilesRestFileName,sFilesRestFileType, sFilesRestisAnatomy] = file_fullpath( sFilesRest.FileName );
+% [sFilesRestFilePath, name, ext]=bst_fileparts(sFilesRestFileName);
+% file_copy(sFilesRestFilePath,['.\result\',SubjectName]);
 
-% Process: Delete folders
+%copy all
+    ProtocolInfo=bst_get('ProtocolInfo');
+    [ProtocolFolder, name, ext]=bst_fileparts(ProtocolInfo.STUDIES);
+    file_copy(ProtocolFolder,['.\result\']);
+    
+% Process: Delete folders/ imported is unuseful for next steps in pipeline, but we can make a backup
 bst_process('CallProcess', 'process_delete', sFilesRestImported, [], ...
     'target', 2);  % Delete folder
 
