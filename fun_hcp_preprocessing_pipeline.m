@@ -224,7 +224,7 @@ end
 %% SAVE RESULTS
 % save head model
 [sHeadmodelFileName,sHeadmodelType, sHeadmodelisAnatomy] = file_fullpath( sHeadmodel.FileName );
-[sHeadmodelPath, name, ext]=sHeadmodelFileName;
+[sHeadmodelPath, name, ext]=bst_fileparts(sHeadmodelFileName);
 file_copy(sHeadmodelPath,['.\result\',SubjectName]);
 % save signal
 sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFilesRest, [], ...
@@ -239,7 +239,7 @@ sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFil
     'baseline',    []);
 
 [sFilesRestFileName,sFilesRestFileType, sFilesRestisAnatomy] = file_fullpath( sFilesRest.FileName );
-[sFilesRestFilePath, name, ext]=sFilesRestFileName;
+[sFilesRestFilePath, name, ext]=bst_fileparts(sFilesRestFileName);
 file_copy(sFilesRestFilePath,['.\result\',SubjectName]);
 
 % Process: Delete folders
