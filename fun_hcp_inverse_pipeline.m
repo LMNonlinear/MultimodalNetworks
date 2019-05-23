@@ -15,17 +15,32 @@ switch nargin
     case 1
         load ./temp/config.mat
         load ./temp/hcp_preprocessing_pipeline.mat
+        FLAG.RELOAD=0;
+        FLAG.NEWPROTOCAOL=0;
+        FLAG.SAMPLE=1;
+        FLAG.INVERSE=1;
+        FLAG.READRESULT=1;
     case 3
         ProtocolName=varargin{1};
         data_dir=varargin{2};
         SubjectName=varargin{3};
         load ./temp/hcp_preprocessing_pipeline.mat
+        FLAG.RELOAD=0;
+        FLAG.NEWPROTOCAOL=0;
+        FLAG.SAMPLE=1;
+        FLAG.INVERSE=1;
+        FLAG.READRESULT=1;
     case 4
         ProtocolName=varargin{1};
         data_dir=varargin{2};
         SubjectName=varargin{3};
         timeWindow=varargin{4};
         load ./temp/hcp_preprocessing_pipeline.mat
+        FLAG.RELOAD=0;
+        FLAG.NEWPROTOCAOL=0;
+        FLAG.SAMPLE=1;
+        FLAG.INVERSE=1;
+        FLAG.READRESULT=1;
     case 5
         ProtocolName=varargin{1};
         data_dir=varargin{2};
