@@ -1,27 +1,17 @@
+close all;clear;clc;
 restoredefaultpath
-% addpath(genpath('..\ResamplingfMRIpipeline\external'));
-% addpath(genpath('.\external'));
-%%
-% % addpath('F:\codes\spm12')
-% % % spm
-% % % spm('quit')
-% % % spm_cfg
-% % % spm('cmdline')
-% % spm('defaults','EEG')
 %% barinstorm
 % addpath('E:\Rigel\codes\brainstorm3')
 addpath('D:\codes\brainstorm\brainstorm_190516\brainstorm3')
-% brainstorm('nogui')
+addpath('.\function\')
 brainstorm('setpath')
-%% fieldtrip
-% addpath('E:\Rigel\codes\fieldtrip-20161224')
-% ft_defaults
-%% default demo para
+%% demo parameter
 ProtocolName='HCPPipeline';
 % data_dir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
-data_dir='M:\MEEGfMRI\Data\HCP_S900';
+data_dir='M:\MEEGfMRI\Data\HCP_S900\';
 SubjectName = '105923';
-%%
+wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
+%% save
 filename = './temp/config.mat';
 save(filename)
 
