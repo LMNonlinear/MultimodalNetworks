@@ -11,36 +11,36 @@ wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
 % data_dir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
 % pipeline_path=mfilename('fullpath');
 %% load surface
-fmri.surfPath={[data_dir,SubjectName,'\MEG\anatomy\',SubjectName,'.L.midthickness.4k_fs_LR.surf.gii'],...
-    [data_dir,SubjectName,'\MEG\anatomy\',SubjectName,'.R.midthickness.4k_fs_LR.surf.gii']};
-% fmri.surfPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.L.midthickness.32k_fs_LR.surf.gii'...
-% 'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.R.midthickness.32k_fs_LR.surf.gii'};
+% fmri.surfPath={[data_dir,SubjectName,'\MEG\anatomy\',SubjectName,'.L.midthickness.4k_fs_LR.surf.gii'],...
+%     [data_dir,SubjectName,'\MEG\anatomy\',SubjectName,'.R.midthickness.4k_fs_LR.surf.gii']};
+fmri.surfPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.L.midthickness.32k_fs_LR.surf.gii'...
+'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.R.midthickness.32k_fs_LR.surf.gii'};
 fmri.surf{1}=gifti(fmri.surfPath{1});
 fmri.surf{2}=gifti(fmri.surfPath{2});
 fmri.surfFaces=[fmri.surf{1}.faces; fmri.surf{2}.faces+size(fmri.surf{1}.vertices,1)];
 fmri.surfVertices=[fmri.surf{1}.vertices; fmri.surf{2}.vertices];
 %% extract label from label file(automatic cortical parcellation )
-fmri.aparcPath={['..\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii'],...
-    ['..\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']};
+% % fmri.aparcPath={['..\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii'],...
+% %     ['..\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']};
 % fmri.aparcPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.L.aparc.32k_fs_LR.label.gii'...
 % 'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.R.aparc.32k_fs_LR.label.gii'};
-fmri.aparc{1}=gifti(fmri.aparcPath{1});
-fmri.aparc{2}=gifti(fmri.aparcPath{2});
-fmri.aparcLabel=[fmri.aparc{1}.cdata;fmri.aparc{2}.cdata];
-fmri.aparcLabelAttribute=[fmri.aparc{1}.labels;fmri.aparc{2}.labels];
-fmri.aparcLabelCollosum=zeros(size(fmri.aparcLabel));
-fmri.aparcLabelCollosum(fmri.aparcLabel==0)=int32(-1);
-fmri.aparcLabelCollosum=fmri.aparcLabelCollosum(:);
+% fmri.aparc{1}=gifti(fmri.aparcPath{1});
+% fmri.aparc{2}=gifti(fmri.aparcPath{2});
+% fmri.aparcLabel=[fmri.aparc{1}.cdata;fmri.aparc{2}.cdata];
+% fmri.aparcLabelAttribute=[fmri.aparc{1}.labels;fmri.aparc{2}.labels];
+% fmri.aparcLabelCollosum=zeros(size(fmri.aparcLabel));
+% fmri.aparcLabelCollosum(fmri.aparcLabel==-1)=int32(-1);
+% fmri.aparcLabelCollosum=fmri.aparcLabelCollosum(:);
 
 %%
 % fmri.aparcDlabelPath='M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.aparc.32k_fs_LR.dlabel.nii';
 % fmri.aparcDlabel=ciftiopen(fmri.aparcDlabelPath,wb_command);
 
 %% extract label from signal file
-fmri.signalPath={'..\result\105923.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii'...
-    '..\result\105923.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
-% fmri.signalPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii',...
-% 'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
+% fmri.signalPath={'..\result\105923.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii'...
+%     '..\result\105923.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
+fmri.signalPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii',...
+'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
 [fmri.signalCell,nifti_struct]=niftiopen(fmri.signalPath);
 fmri.signalMat=[fmri.signalCell{1};fmri.signalCell{2}];
 fmri.signalLabelCollosum=sum(fmri.signalMat,2);
@@ -85,35 +85,35 @@ fmri.signalLabelCollosum=fmri.signalLabelCollosum(:);
 % % fmri.aparcDlabelLabelCollosum=fmri.aparcDlabelLabelCollosum(:);
 % % fmri.aparcDscalarLabel=fmri.aparcDscalar.cdata
 %% sperated label
-% fmri.aparcDlabelSperatedPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.aparc.32k_fs_LR.L.label.gii'...
-%     'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.aparc.32k_fs_LR.R.label.gii'};
-% fmri.aparcDlabelSperated=gifti(fmri.aparcDlabelSperatedPath);
-% % fmri.aparcDlabelSperatedLabel={fmri.aparcDlabelSperated(1).cdata,fmri.aparcDlabelSperated(2).cdata};
-% fmri.aparcDlabelSperatedLabel=[fmri.aparcDlabelSperated(1).cdata;fmri.aparcDlabelSperated(2).cdata];
-% fmri.aparcDlabelSperatedLabelAttribute=[fmri.aparcDlabelSperated(1).labels,fmri.aparcDlabelSperated(2).labels];
-% % fmri.aparcDlabelSperatedLabelName={fmri.aparcDlabelSperatedLabelAttribute(1).name,fmri.aparcDlabelSperatedLabelAttribute(2).name};
-% fmri.aparcDlabelSperatedLabelName=fmri.aparcDlabelSperatedLabelAttribute(1).name;
-% fmri.aparcDlabelSperatedLabelCollosum=zeros(size(fmri.aparcDlabelSperatedLabel));
-% fmri.aparcDlabelSperatedLabelCollosum(fmri.aparcDlabelSperatedLabel==0)=int32(-1);
-% fmri.aparcDlabelSperatedLabelCollosum=fmri.aparcDlabelSperatedLabelCollosum(:);
+fmri.aparcDlabelSperatedPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.aparc.32k_fs_LR.L.label.gii'...
+    'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.aparc.32k_fs_LR.R.label.gii'};
+fmri.aparcDlabelSperated=gifti(fmri.aparcDlabelSperatedPath);
+% fmri.aparcDlabelSperatedLabel={fmri.aparcDlabelSperated(1).cdata,fmri.aparcDlabelSperated(2).cdata};
+fmri.aparcDlabelSperatedLabel=[fmri.aparcDlabelSperated(1).cdata;fmri.aparcDlabelSperated(2).cdata];
+fmri.aparcDlabelSperatedLabelAttribute=[fmri.aparcDlabelSperated(1).labels,fmri.aparcDlabelSperated(2).labels];
+% fmri.aparcDlabelSperatedLabelName={fmri.aparcDlabelSperatedLabelAttribute(1).name,fmri.aparcDlabelSperatedLabelAttribute(2).name};
+fmri.aparcDlabelSperatedLabelName=fmri.aparcDlabelSperatedLabelAttribute(1).name;
+fmri.aparcDlabelSperatedLabelCollosum=zeros(size(fmri.aparcDlabelSperatedLabel));
+fmri.aparcDlabelSperatedLabelCollosum(fmri.aparcDlabelSperatedLabel==0)=int32(-1);
+fmri.aparcDlabelSperatedLabelCollosum=fmri.aparcDlabelSperatedLabelCollosum(:);
 %%
 close all
 figure
 % double(fmri.label)-fmri.label_surf;
 subplot(2,1,1)
-plot(-double(fmri.signalLabelCollosum)+double(fmri.aparcLabelCollosum),'b');
+plot(-double(fmri.signalLabelCollosum)+double(fmri.aparcDlabelSperatedLabelCollosum),'b');
 % hold on;
 subplot(2,1,2)
 plot(fmri.signalLabelCollosum*2,'r')
 hold on
-plot(fmri.aparcLabelCollosum,'g')
+plot(fmri.aparcDlabelSperatedLabelCollosum,'g')
 
 
 %%
 % close all
 figure
-val{1}=fmri.aparcLabelCollosum(1:size(fmri.surfVertices,1)/2);
-val{2}=fmri.aparcLabel(1:size(fmri.surfVertices,1)/2);
+val{1}=fmri.aparcDlabelSperatedLabelCollosum(1:size(fmri.surfVertices,1)/2);
+val{2}=fmri.aparcDlabelSperatedLabel(1:size(fmri.surfVertices,1)/2);
 val{3}=fmri.signalLabelCollosum(1:size(fmri.surfVertices,1)/2);
 val{4}=fmri.signalMat(1:size(fmri.surfVertices,1)/2,1);
 

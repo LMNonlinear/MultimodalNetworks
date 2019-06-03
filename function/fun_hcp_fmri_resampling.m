@@ -2,7 +2,7 @@ function varargout= fun_hcp_fmri_resampling(varargin)
 load ./temp/config.mat
 addpath('./external')
 addpath('./external/cifti-nan-matlab/')
-addpath('./external/nifti-matlab/')
+addpath('./external/nifti-spm-matlab/')
 
 %% FLAG
 FLAG.SPHERE_RESAMPLE=1;
