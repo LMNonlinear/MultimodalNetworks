@@ -3,12 +3,27 @@ function varargout= fun_hcp_match_label(varargin)
 switch nargin
     case 0
         load .\temp\config.mat
+        fmriNiftiPath=['.\result\',SubjectName,'.4k.surface.fMRI_REST_LR.nii'];
+        megNiftiPath=['.\result\',SubjectName,'.4k.source.MEG_REST_LR.nii'];
+        fmriLabelPath={['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii']...
+            ['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']};
     case 1
         SubjectName=varargin{1};
-    case 3
-        SubjectName=varargin(1);
-        fmriNiftiPath=varargin(2);
-        megNiftiPath=varargin(3);
+        fmriNiftiPath=['.\result\',SubjectName,'.4k.surface.fMRI_REST_LR.nii'];
+        megNiftiPath=['.\result\',SubjectName,'.4k.source.MEG_REST_LR.nii'];
+        fmriLabelPath={['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii']...
+            ['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']};
+    case 4
+        SubjectName=varargin{1};
+        fmriNiftiPath=varargin{2};
+        megNiftiPath=varargin{3};
+        fmriLabelPath=varargin{4};
+    case 5
+        SubjectName=varargin{1};
+        fmriNiftiPath=varargin{2};
+        megNiftiPath=varargin{3};
+        fmriLabelPath=varargin{4};
+        outputType=varargin{5};
 end
 addpath('.\external\nifti-analyze-matlab\');
 addpath('.\external\cifti-nan-matlab\');
@@ -16,15 +31,17 @@ FLAG_DISPLAY=0;
 %% READ DATA
 % fmriNiftiL=nifti(['.\result\',SubjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii']);
 % fmriNiftiR=nifti(['.\result\',SubjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii']);
-fmriNiftiPath=['.\result\',SubjectName,'.4k.surface.fMRI_REST_LR.nii'];
-megNiftiPath=['.\result\',SubjectName,'.4k.source.MEG_REST_LR.nii'];
-fmriNifti=load_nii(fmriNiftiPath);
-megNifti=load_nii(megNiftiPath);
-fmriLabelL=gifti(['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii']);
-fmriLabelR=gifti(['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']);
+
 %
 % fmriSignal=[squeeze(fmriNiftiL.img);squeeze(fmriNiftiR.img)];
 % fmriSignal=[squeeze(double(fmriNiftiL.dat));squeeze(double(fmriNiftiR.dat))];
+% fmriLabelL=gifti(['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii']);
+% fmriLabelR=gifti(['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']);
+
+fmriNifti=load_nii(fmriNiftiPath);
+megNifti=load_nii(megNiftiPath);
+fmriLabelL=gifti(fmriLabelPath{1});
+fmriLabelR=gifti(fmriLabelPath{2});
 fmriSignal=squeeze(double(fmriNifti.img));
 megSignal=squeeze(double(megNifti.img));
 labelAll=[fmriLabelL.cdata;fmriLabelR.cdata];
@@ -35,12 +52,20 @@ megSignal(labelAll==0,:)=0;
 
 fmriNifti.img=reshape(fmriSignal,[size(fmriSignal,1),1,1,size(fmriSignal,2)]);
 megNifti.img=reshape(megSignal,[size(megSignal,1),1,1,size(megSignal,2)]);
-
-fmriPathOutput=strrep(fmriNiftiPath,['surface'],['surface.matched']);
-save_nii(fmriNifti,fmriPathOutput);
-megPathOutput=strrep(megNiftiPath,['source'],['source.matched']);
-save_nii(megNifti,megPathOutput);
-
+switch outputType
+    case 'nifti'
+        fmriPathOutput=strrep(fmriNiftiPath,['surface'],['surface.matched']);
+        save_nii(fmriNifti,fmriPathOutput);
+        megPathOutput=strrep(megNiftiPath,['source'],['source.matched']);
+        save_nii(megNifti,megPathOutput);
+    case 'mat'
+        fmriPathOutput=strrep(fmriNiftiPath,['surface'],['surface.matched']);
+        fmriPathOutput=strrep(fmriPathOutput,['.nii'],['.mat']);
+        megPathOutput=strrep(megNiftiPath,['source'],['source.matched']);
+        megPathOutput=strrep(megPathOutput,['.nii'],['.mat']);
+        save(fmriPathOutput,'fmriSignal','-v7.3');
+        save(megPathOutput,'megSignal','-v7.3');
+end
 output(1).path=fmriPathOutput;
 output(2).path=megPathOutput;
 output(1).type='fmri';
