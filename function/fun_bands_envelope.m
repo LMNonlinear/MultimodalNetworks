@@ -14,11 +14,13 @@ load ./temp/config.mat
 if nargin==0||nargin==1
     megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
     megBandMat=load(megBandMatPath);
+    megBandMat=megBandMat.megBand;
     %     megBandSignal=megBandMat.megBandSignal;
 elseif nargin==2
     megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
     
 end
+%% process
 for iBand = 1:megBandMat.nFreqBands
     megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
     %     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
@@ -26,6 +28,9 @@ for iBand = 1:megBandMat.nFreqBands
     %     subplot(megBandMat.nFreqBands,1,iBand)
     %     plot(megBandMat.megBandSignal{iBand}');hold on;
     %     plot(megBandHilebertEnvelope{iBand}');
+    %cut head and end parts
+    megBandHilebertEnvelope{iBand}=megBandHilebert{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60);
+
 end
 % figure
 % plot(megBandMat.megBandSignal{1}');hold on;

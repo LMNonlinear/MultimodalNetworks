@@ -1,8 +1,9 @@
 close all;clear;clc;
 restoredefaultpath
 [~, hostname] = system('hostname');
+hostname=string(strtrim(hostname));
 switch hostname
-    case 'KBOMATEBOOKXPRO '
+    case 'KBOMATEBOOKXPRO'
         %% barinstorm
         addpath('D:\codes\brainstorm\brainstorm_190516\brainstorm3')
         addpath('.\function\')
