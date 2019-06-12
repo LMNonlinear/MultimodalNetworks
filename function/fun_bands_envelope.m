@@ -12,19 +12,20 @@ load ./temp/config.mat
 
 %% read data
 if nargin==0||nargin==1
-megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
-megBandMat=load(megBandMatPath);
-%     megBandSignal=megBandMat.megBandSignal;
+    megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
+    megBandMat=load(megBandMatPath);
+    %     megBandSignal=megBandMat.megBandSignal;
 elseif nargin==2
-
+    megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
+    
 end
 for iBand = 1:megBandMat.nFreqBands
     megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
-%     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
+    %     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
-%     subplot(megBandMat.nFreqBands,1,iBand)
-%     plot(megBandMat.megBandSignal{iBand}');hold on;
-%     plot(megBandHilebertEnvelope{iBand}');
+    %     subplot(megBandMat.nFreqBands,1,iBand)
+    %     plot(megBandMat.megBandSignal{iBand}');hold on;
+    %     plot(megBandHilebertEnvelope{iBand}');
 end
 % figure
 % plot(megBandMat.megBandSignal{1}');hold on;
