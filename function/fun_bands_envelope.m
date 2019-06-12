@@ -31,7 +31,7 @@ parfor iBand = 1:megBandMat.nFreqBands
     %     plot(megBandMat.megBandSignal{iBand}');hold on;
     %     plot(megBandHilebertEnvelope{iBand}');
     %cut head and end parts
-    megBandHilebertEnvelope{iBand}=megBandHilebert{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60);
+    megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60);
 end
 closematlabpool
 % figure
