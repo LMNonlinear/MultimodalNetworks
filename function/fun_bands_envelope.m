@@ -1,4 +1,5 @@
 function varargout= fun_bands_envelope(varargin)
+addpath('./external/parpool/');
 switch nargin
     case 0
         load ./temp/config.mat
@@ -21,7 +22,8 @@ elseif nargin==2
     
 end
 %% process
-for iBand = 1:megBandMat.nFreqBands
+startmatlabpool
+parfor iBand = 1:megBandMat.nFreqBands
     megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
     %     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
@@ -30,8 +32,8 @@ for iBand = 1:megBandMat.nFreqBands
     %     plot(megBandHilebertEnvelope{iBand}');
     %cut head and end parts
     megBandHilebertEnvelope{iBand}=megBandHilebert{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60);
-
 end
+closematlabpool
 % figure
 % plot(megBandMat.megBandSignal{1}');hold on;
 % plot(megBandHilebertEnvelope{1}');
