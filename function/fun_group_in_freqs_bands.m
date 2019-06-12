@@ -36,7 +36,9 @@ nFreqBands=size(bandBounds,1);
 isMirror=0;
 for iBand = 1:nFreqBands
     %     megBand{iBand} = process_bandpass('Compute',fmriSignal(1,:), sampleRateMeg, BandBounds(iBand,1), BandBounds(iBand,2), 'bst-hfilter-2019', isMirror);
-    [megBandSignal{iBand}, filtSpec{iBand}, Messages{iBand}] = process_bandpass('Compute',megSignal, sampleRateMeg, bandBounds(iBand,1), bandBounds(iBand,2), 'bst-hfilter-2019', isMirror);
+%     [megBandSignal{iBand}, filtSpec{iBand}, Messages{iBand}] = process_bandpass('Compute',megSignal, sampleRateMeg, bandBounds(iBand,1), bandBounds(iBand,2), 'bst-hfilter-2019', isMirror);
+    [megBandSignal{iBand}, filtSpec{iBand}, Messages{iBand}] = process_bandpass('Compute',megSignal(1:2,:), sampleRateMeg, bandBounds(iBand,1), bandBounds(iBand,2), 'bst-hfilter-2019', isMirror);
+
     %     subplot(nFreqBands,1,iBand)
     %     plot(megBandSignal{iBand}')
 end

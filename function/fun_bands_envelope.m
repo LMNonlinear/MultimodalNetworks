@@ -7,7 +7,7 @@ switch nargin
         SubjectName=varargin{1};
     case 2
         SubjectName=varargin{1};
-        megBandMat=varargin{2};
+        matPath=varagin{2};
 end
 load ./temp/config.mat
 
@@ -22,8 +22,9 @@ elseif nargin==2
     
 end
 %% process
-startmatlabpool
-parfor iBand = 1:megBandMat.nFreqBands
+% startmatlabpool
+% parfor iBand = 1:megBandMat.nFreqBands
+for iBand = 1:megBandMat.nFreqBands
     megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
     %     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
@@ -33,7 +34,8 @@ parfor iBand = 1:megBandMat.nFreqBands
     %cut head and end parts
     megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60);
 end
-closematlabpool
+% closematlabpool
+
 % figure
 % plot(megBandMat.megBandSignal{1}');hold on;
 % plot(megBandHilebertEnvelope{1}');
@@ -45,7 +47,7 @@ closematlabpool
 %% output
 
 megBandEnvelope= rmfield(megBandMat,'megBandSignal');
-megBandEnvelope.megBandHilebertEnvelope=megBandHilebertEnvelope;
+megBandEnvelope.megBandEnvelope=megBandHilebertEnvelope;
 megPathOutput=strrep(megBandMatPath,['matched'],['matched.band.envelope']);
 save(megPathOutput,'megBandEnvelope', '-v7.3');
 
