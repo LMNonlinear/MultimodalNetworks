@@ -29,16 +29,46 @@ end
 % end
 %% weltch cross spectrum
 % close all
-% if sum(strcmp(modality,'meg'))
-%     [pxy_mimo,f]=cpsd(megSignal',megSignal',[],[],[],250,'mimo');
-% end
-%% wavelet coherence
+if sum(strcmp(modality,'meg'))
+    [pxy_mimo,f]=cpsd(megSignal',megSignal',[],[],[],250,'mimo'); %should not use mimo?
+    cpsd(megSignal',megSignal',[],[],[],250,'mimo');    
+end
+cxy_mino=[];
+for i=1:size(pxy_mimo,2)
+    cxy_mino(:,i,:)=(abs(pxy_mimo(:,i,:)).^2)./real(pxy_mimo(:,i,i));
+end
+for j=1:size(pxy_mimo,3)
+    cxy_mino(:,:,j)=cxy_mino(:,:,j)./real(pxy_mimo(:,j,j));
+end
+figure
 fs=250;
 tm=0:1/fs:30-(1/fs);
-% [wcoh,~,f,coi] = wcoherence(megSignal(1,:)',megSignal(2,:)',10,'numscales',16);
-% helperPlotCoherence(wcoh,tm,f,coi,'Seconds','Hz');
-[wcoh,wcs,f] = wcoherence(megSignal(1,:)',megSignal(2,:)',fs) ;
-wcoherence(megSignal(1,:)',megSignal(2,:)',fs) ;
+for i=1:size(pxy_mimo,2)
+    for j=1:size(pxy_mimo,3)
+    plot(cxy_mino(:,i,j));hold on
+    end
+end
+% f_mimo=linspace(0,125,size(cxy_mino,1));
+% [cxy,f]=mscohere(megSignal(1,:)',megSignal(2,:)',[],[],[],fs);
+% figure
+% plot(f,cxy);hold on
+% plot(f_mimo,cxy_mino(:,1,2))
+
+
+
+% %% Magnitude-squared coherence
+% for i=1:size(megSignal,1)
+%     [cxy(i),f(i)]= mscohere(megSignal(i,:)',megSignal',[],[],[],fs);
+%     mscohere(megSignal(i,:)',megSignal',[],[],[],fs)
+% end
+%% wavelet coherence
+% fs=250;
+% tm=0:1/fs:30-(1/fs);
+% % [wcoh,~,f,coi] = wcoherence(megSignal(1,:)',megSignal(2,:)',10,'numscales',16);
+% % helperPlotCoherence(wcoh,tm,f,coi,'Seconds','Hz');
+% [wcoh,wcs,f] = wcoherence(megSignal(1,:)',megSignal(2,:)',fs) ;
+% wcoherence(megSignal(1,:)',megSignal(2,:)',fs) ;
+
 %% test sigmoid
 % if sum(strcmp(modality,'meg'))
 %     close all
