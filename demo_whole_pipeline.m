@@ -16,6 +16,6 @@ fmriLabelPath={['.\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gi
 [pathData]=fun_hcp_match_label(SubjectName,fmriNiftiPath,megNiftiPath,fmriLabelPath,'mat');
 %% bands and envelope
 [pathMegBand,megBand]= fun_group_in_freqs_bands(SubjectName);
-[pathMegBandEnvelope,megBandEnvelope]= fun_bands_envelope(SubjectName,megBand);
+[pathMegBandEnvelope,megBandEnvelope]= fun_bands_envelope(SubjectName,pathMegBand);
 %%
 toc

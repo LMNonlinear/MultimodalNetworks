@@ -7,7 +7,7 @@ switch nargin
         SubjectName=varargin{1};
     case 2
         SubjectName=varargin{1};
-        matPath=varagin{2};
+        matPath=varargin{2};
 end
 load ./temp/config.mat
 
