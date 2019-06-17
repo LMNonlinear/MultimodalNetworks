@@ -48,7 +48,7 @@ end
 
 megBandEnvelope= rmfield(megBandMat,'megBandSignal');
 megBandEnvelope.megBandEnvelope=megBandHilebertEnvelope;
-megPathOutput=strrep(megBandMatPath,['matched'],['matched.band.envelope']);
+megPathOutput=strrep(megBandMatPath,['band'],['band.envelope']);
 save(megPathOutput,'megBandEnvelope', '-v7.3');
 
 switch nargout

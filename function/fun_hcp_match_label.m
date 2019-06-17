@@ -1,5 +1,5 @@
 function varargout= fun_hcp_match_label(varargin)
-
+outputType='mat';
 switch nargin
     case 0
         load .\temp\config.mat
@@ -65,6 +65,11 @@ switch outputType
         megPathOutput=strrep(megPathOutput,['.nii'],['.mat']);
         save(fmriPathOutput,'fmriSignal','-v7.3');
         save(megPathOutput,'megSignal','-v7.3');
+        fmriLabelPathOutput=strrep(fmriLabelPath{1},['L.label.gii'],['label.mat']);
+        labelL=fmriLabelL.cdata;
+        labelR=fmriLabelR.cdata;
+        attribute=fmriLabelL.labels;
+        save(fmriLabelPathOutput,'labelL','labelR','attribute')
 end
 output(1).path=fmriPathOutput;
 output(2).path=megPathOutput;
