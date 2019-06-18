@@ -1,30 +1,49 @@
-% function varargout=fun_evelope_based_correlation(varargin)
+function varargout=fun_evelope_based_correlation(varargin)
 modality={'meg','fmri'};
+FLAG_SORTBYLABEL=0;
 %
-% switch nargin
-%     case 0
-load ./temp/config.mat
-%
-%     case 2
-%         SubjectName=varargin{1};
-%         modality=varargin{2};
-% end
+switch nargin
+    case 0
+        load ./temp/config.mat
+    case 2
+        SubjectName=varargin{1};
+        modality=varargin{2};
+    case 3
+        SubjectName=varargin{1};
+        modality=varargin{2};
+        FLAG_SORTBYLABEL=varargin{3};
+    case 6
+        SubjectName=varargin{1};
+        modality=varargin{2};
+        FLAG_SORTBYLABEL=varargin{3};
+        megPath=varargin{4};
+        fmriPath=varargin{5};
+        labelPath=varargin{6};
+end
 %%
-labelPath=['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.label.mat'];
-labelMat=load(labelPath);
-%% meg
-% if nargin==0||nargin==2
-if sum(strcmp(modality,'meg'))
-    megPath=['.\result\',SubjectName,'.4k.source.matched.band.envelope.MEG_REST_LR.mat'];
+if nargin==0||nargin==2||nargin==3
+    %% label
+    labelPath=['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.label.mat'];
+    labelMat=load(labelPath);
+    %% meg
+    if sum(strcmp(modality,'meg'))
+        megPath=['.\result\',SubjectName,'.4k.source.matched.band.envelope.MEG_REST_LR.mat'];
+        megMat=load(megPath);
+        megSignal=megMat.megBandEnvelope.megBandEnvelope;
+    end
+    %% fmri
+    if sum(strcmp(modality,'fmri'))
+        fmriPath=['.\result\',SubjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
+        fmriMat=load(fmriPath);
+        fmriSignal=fmriMat.fmriSignal;
+    end
+elseif nargin==6
+    labelMat=load(labelPath);
     megMat=load(megPath);
     megSignal=megMat.megBandEnvelope.megBandEnvelope;
-end
-if sum(strcmp(modality,'fmri'))
-    fmriPath=['.\result\',SubjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
     fmriMat=load(fmriPath);
     fmriSignal=fmriMat.fmriSignal;
 end
-% end
 %%
 if sum(strcmp(modality,'meg'))
     if iscell(megSignal)
@@ -48,12 +67,42 @@ if sum(strcmp(modality,'fmri'))
 end
 
 %%
-close all
-nHemiSphere=length(labelMat.labelL);
-[labelSortL,idxSortL] = sort(labelMat.labelL);
-[labelSortR,idxSortR] = sort(labelMat.labelR);
-fmriCorrSort=fmriCorr([idxSortL;idxSortR+nHemiSphere],:);
-fmriCorrSort=fmriCorrSort(:,[idxSortL;idxSortR+nHemiSphere]);
-figure;imagesc(fmriCorrSort);title(['fmri corr']);colorbar;
-
-
+% close all
+if FLAG_SORTBYLABEL==1
+    %% label sort
+    nHemiSphere=length(labelMat.labelL);
+    [labelSortL,idxSortL] = sort(labelMat.labelL);
+    [labelSortR,idxSortR] = sort(labelMat.labelR);
+    %% fmri sort
+    fmriCorrSort=fmriCorr([idxSortL;idxSortR+nHemiSphere],:);
+    fmriCorrSort=fmriCorrSort(:,[idxSortL;idxSortR+nHemiSphere]);
+    figure;imagesc(fmriCorrSort);title(['fmri corr']);colorbar;
+    fmriCorr=fmriCorrSort;
+    %% meg sort
+    if iscell(megSignal)
+        for iBand=1:size(megSignal,1)
+            megCorrSort=megCorr{iBand}([idxSortL;idxSortR+nHemiSphere],:);
+            megCorrSort=megCorrSort{iBand}(:,[idxSortL;idxSortR+nHemiSphere]);
+            figure;imagesc(megCorrSort{iBand});title(['meg corr', num2str(iBand)]);colorbar;
+            megCorr=megCorrSort;
+        end
+    elseif ismatrix(megSignal)
+        megCorrSort=megCorr([idxSortL;idxSortR+nHemiSphere],:);
+        megCorrSort=megCorrSort(:,[idxSortL;idxSortR+nHemiSphere]);
+        figure;imagesc(megCorrSort);title(['meg corr']);colorbar;
+        megCorr=megCorrSort;
+    end
+end
+%% save
+if FLAG_SORTBYLABEL==1
+    labelOut={labelSortL,labelSortR,idxSortL,idxSortR};
+    comment=[modality,'correltion sorted by labels'];
+    corrPath=['.\result\',SubjectName,'suface.correlation.mat'];
+    save(corrPath,'fmriCorr','megCorr','labelOut','comment')
+elseif FLAG_SORTBYLABEL==0
+    comment=[modality,'correltion'];
+    corrPath=['.\result\',SubjectName,'suface.correlation.mat'];
+    save(corrPath,'fmriCorr','megCorr','comment')
+end
+varargout{1}=fmriCorr;
+varargout{2}=megCorr;

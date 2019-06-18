@@ -1,5 +1,6 @@
 % function varargout=fun_cross_spectrum(varargin)
 modality={'meg','fmri'};
+FLAG_DISPLAY=0;
 %
 % switch nargin
 %     case 0
@@ -9,7 +10,7 @@ load ./temp/config.mat
 %         SubjectName=varargin{1};
 %         modality=varargin{2};
 % end
-%%
+%% label
 % labelPath=['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.label.mat'];
 % labelMat=load(labelPath);
 %% meg
@@ -28,63 +29,46 @@ end
 % end
 % end
 %% weltch cross spectrum
-% close all
+%% cross spectrum
 if sum(strcmp(modality,'meg'))
-    [pxy_mimo,f]=cpsd(megSignal',megSignal',[],[],[],250,'mimo'); %should not use mimo?
-    cpsd(megSignal',megSignal',[],[],[],250,'mimo');    
+    [pxy,f]=cpsd(megSignal',megSignal',[],[],[],250,'mimo'); %should not use mimo?
 end
-cxy_mino=[];
-for i=1:size(pxy_mimo,2)
-    cxy_mino(:,i,:)=(abs(pxy_mimo(:,i,:)).^2)./real(pxy_mimo(:,i,i));
+%% coherence
+cxy=[];
+for i=1:size(pxy,2)
+    cxy(:,i,:)=(abs(pxy(:,i,:)).^2)./real(pxy(:,i,i));
 end
-for j=1:size(pxy_mimo,3)
-    cxy_mino(:,:,j)=cxy_mino(:,:,j)./real(pxy_mimo(:,j,j));
+for j=1:size(pxy,3)
+    cxy(:,:,j)=cxy(:,:,j)./real(pxy(:,j,j));
 end
-figure
 fs=250;
 tm=0:1/fs:30-(1/fs);
-for i=1:size(pxy_mimo,2)
-    for j=1:size(pxy_mimo,3)
-    plot(cxy_mino(:,i,j));hold on
-    end
+% f=linspace(0,125,size(cxy_mino,1));
+
+if FLAG_DISPLAY==1
+    figure
 end
-% f_mimo=linspace(0,125,size(cxy_mino,1));
-% [cxy,f]=mscohere(megSignal(1,:)',megSignal(2,:)',[],[],[],fs);
-% figure
-% plot(f,cxy);hold on
-% plot(f_mimo,cxy_mino(:,1,2))
+%% bands
+bandsFreqs= {'delta', '2, 4', 'mean';...
+    'theta', '5, 7', 'mean';...
+    'alpha', '8, 12', 'mean';...
+    'beta', '15, 29', 'mean';...
+    'gamma', '30, 90', 'mean';...
+    'gamma1', '30, 59', 'mean';...
+    'gamma2', '60, 90', 'mean'};
+bandBounds = process_tf_bands('GetBounds', bandsFreqs);
+nFreqBands=size(bandBounds,1);
+
+%%
+% mean of bands.
 
 
-
-% %% Magnitude-squared coherence
-% for i=1:size(megSignal,1)
-%     [cxy(i),f(i)]= mscohere(megSignal(i,:)',megSignal',[],[],[],fs);
-%     mscohere(megSignal(i,:)',megSignal',[],[],[],fs)
+% 
+% iFreq = find((TimefreqMat.Freqs >= BandBounds(iBand,1)) & (TimefreqMat.Freqs <= BandBounds(iBand,2)));
+% switch lower(FreqBands{iBand,3})
+% case 'mean', TF_bands(:,:,iBand) = mean(TimefreqMat.TF(:,:,iFreq), 3);
+% case 'median', TF_bands(:,:,iBand) = median(TimefreqMat.TF(:,:,iFreq), 3);
+% case 'max', TF_bands(:,:,iBand) = max(TimefreqMat.TF(:,:,iFreq), [], 3);
+% case 'std', TF_bands(:,:,iBand) = std(TimefreqMat.TF(:,:,iFreq), [], 3);
 % end
-%% wavelet coherence
-% fs=250;
-% tm=0:1/fs:30-(1/fs);
-% % [wcoh,~,f,coi] = wcoherence(megSignal(1,:)',megSignal(2,:)',10,'numscales',16);
-% % helperPlotCoherence(wcoh,tm,f,coi,'Seconds','Hz');
-% [wcoh,wcs,f] = wcoherence(megSignal(1,:)',megSignal(2,:)',fs) ;
-% wcoherence(megSignal(1,:)',megSignal(2,:)',fs) ;
 
-%% test sigmoid
-% if sum(strcmp(modality,'meg'))
-%     close all
-%     %     [pxy,f
-%     % megSignalSelected=megSignal+1000*sin(100*2*pi*([1:size(megSignal,2)])/250);
-% %     megSignalNormalize=normalize(megSignal');
-%     megSignalSelected(1,:)=megSignal(1,:);
-%     megSignalSelected(2,:)=sigmoid(megSignal(2,:));
-%     % megSignalSelected(2,:)=sigmoid(megSignalNormalize(2,:));
-%     subplot(2,1,1)
-%     plot(megSignalSelected(1,:));hold on
-%     plot(megSignalSelected(2,:));
-%     subplot(2,1,2)
-%     cpsd(megSignalSelected(1,:)',megSignalSelected(2,:)',[],[],[],250);hold on
-%     cpsd(megSignal(1,:)',megSignal(2,:)',[],[],[],250);
-%
-%     %     plot(pxy)
-%
-% end
