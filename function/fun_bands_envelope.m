@@ -7,7 +7,7 @@ switch nargin
         SubjectName=varargin{1};
     case 2
         SubjectName=varargin{1};
-        matPath=varargin{2};
+        megBandMatPath=varargin{2};
 end
 load ./temp/config.mat
 
@@ -18,13 +18,14 @@ if nargin==0||nargin==1
     megBandMat=megBandMat.megBand;
     %     megBandSignal=megBandMat.megBandSignal;
 elseif nargin==2
-    megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
-    
+    %     megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
+    megBandMat=load(megBandMatPath);
+    megBandMat=megBandMat.megBand;
 end
 %% process
-% startmatlabpool
-% parfor iBand = 1:megBandMat.nFreqBands
-for iBand = 1:megBandMat.nFreqBands
+startmatlabpool
+parfor iBand = 1:megBandMat.nFreqBands
+    %     for iBand = 1:megBandMat.nFreqBands
     megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
     %     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
@@ -32,9 +33,9 @@ for iBand = 1:megBandMat.nFreqBands
     %     plot(megBandMat.megBandSignal{iBand}');hold on;
     %     plot(megBandHilebertEnvelope{iBand}');
     %cut head and end parts
-    megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60);
+    megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60-1);
 end
-% closematlabpool
+closematlabpool
 
 % figure
 % plot(megBandMat.megBandSignal{1}');hold on;
