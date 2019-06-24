@@ -53,7 +53,7 @@ megBand.bandsFreqs=bandsFreqs;
 megBand.bandBounds=bandBounds;
 
 megPathOutput=strrep(megMatPath,['matched'],['matched.band']);
-save(megPathOutput,'megBand', '-v7.3');
+save(megPathOutput,'-struct','megBand', '-v7.3');
 switch nargout
     case 1
         varargout=megPathOutput;

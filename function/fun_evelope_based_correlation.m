@@ -29,7 +29,9 @@ if nargin==0||nargin==2||nargin==3
     if sum(strcmp(modality,'meg'))
         megPath=['.\result\',SubjectName,'.4k.source.matched.band.envelope.MEG_REST_LR.mat'];
         megMat=load(megPath);
-        megSignal=megMat.megBandEnvelope.megBandEnvelope;
+        %         megSignal=megMat.megBandEnvelope.megBandEnvelope;
+        megSignal=megMat.megBandEnvelope;
+        
     end
     %% fmri
     if sum(strcmp(modality,'fmri'))
@@ -40,7 +42,8 @@ if nargin==0||nargin==2||nargin==3
 elseif nargin==6
     labelMat=load(labelPath);
     megMat=load(megPath);
-    megSignal=megMat.megBandEnvelope.megBandEnvelope;
+    %     megSignal=megMat.megBandEnvelope.megBandEnvelope;
+    megSignal=megMat.megBandEnvelope;
     fmriMat=load(fmriPath);
     fmriSignal=fmriMat.fmriSignal;
 end
@@ -83,7 +86,7 @@ if FLAG_SORTBYLABEL==1
     figure;imagesc(fmriCorrSort);title(['fmri corr sorted']);colorbar;
     fmriCorr=fmriCorrSort;
     fun_save_figure(['correlation fMRI sorted'])
-
+    
     %% meg sort
     if iscell(megSignal)
         for iBand=1:size(megSignal,1)
@@ -99,7 +102,7 @@ if FLAG_SORTBYLABEL==1
         figure;imagesc(megCorrSort);title(['meg corr sorted']);colorbar;
         megCorr=megCorrSort;
         fun_save_figure(['correlation MEG sorted', iBand])
-
+        
     end
 end
 %% save

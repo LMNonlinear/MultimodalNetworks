@@ -64,13 +64,18 @@ switch outputType
         megPathOutput=strrep(megNiftiPath,['source'],['source.matched']);
         megPathOutput=strrep(megPathOutput,['.nii'],['.mat']);
         save(fmriPathOutput,'fmriSignal','-v7.3');
+        %         bst_save(fmriPathOutput,fmriSignal,'v7.3');
         save(megPathOutput,'megSignal','-v7.3');
-        fmriLabelPathOutput=strrep(fmriLabelPath{1},['L.label.gii'],['label.mat']);
-        labelL=fmriLabelL.cdata;
-        labelR=fmriLabelR.cdata;
-        attribute=fmriLabelL.labels;
-        save(fmriLabelPathOutput,'labelL','labelR','attribute')
+        %         bst_save(megPathOutput,,megSignal,'v7.3');
 end
+fmriLabelPathOutput=strrep(fmriLabelPath{1},['L.label.gii'],['label.mat']);
+label.labelL=fmriLabelL.cdata;
+label.labelR=fmriLabelR.cdata;
+label.attribute=fmriLabelL.labels;
+%         save(fmriLabelPathOutput,'labelL','labelR','attribute')
+bst_save(fmriLabelPathOutput,'-struct',label,'v7.3');
+
+%%
 output(1).path=fmriPathOutput;
 output(2).path=megPathOutput;
 output(1).type='fmri';
