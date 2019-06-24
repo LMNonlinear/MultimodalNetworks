@@ -20,7 +20,7 @@ if nargin==0||nargin==1
 elseif nargin==2
     %     megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
     megBandMat=load(megBandMatPath);
-    megBandMat=megBandMat.megBand;
+%     megBandMat=megBandMat.megBand;
 end
 %% process
 startmatlabpool
@@ -50,7 +50,7 @@ closematlabpool
 megBandEnvelope= rmfield(megBandMat,'megBandSignal');
 megBandEnvelope.megBandEnvelope=megBandHilebertEnvelope;
 megPathOutput=strrep(megBandMatPath,['band'],['band.envelope']);
-save(megPathOutput,'megBandEnvelope', '-v7.3');
+save(megPathOutput,'-struct','megBandEnvelope', '-v7.3');
 
 switch nargout
     case 1
