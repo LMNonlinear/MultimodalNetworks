@@ -73,7 +73,8 @@ label.labelL=fmriLabelL.cdata;
 label.labelR=fmriLabelR.cdata;
 label.attribute=fmriLabelL.labels;
 %         save(fmriLabelPathOutput,'labelL','labelR','attribute')
-bst_save(fmriLabelPathOutput,'-struct',label,'v7.3');
+% save(fmriLabelPathOutput,'-struct',label,'-v7.3');
+bst_save(fmriLabelPathOutput,label,'v7.3');
 
 %%
 output(1).path=fmriPathOutput;
