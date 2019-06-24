@@ -1,6 +1,6 @@
 function varargout=fun_evelope_based_correlation(varargin)
 modality={'meg','fmri'};
-FLAG_SORTBYLABEL=0;
+FLAG_SORTBYLABEL=1;
 %
 switch nargin
     case 0
