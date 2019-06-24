@@ -23,7 +23,7 @@ end
 % You have to specify the folder in which the tutorial dataset is unzipped
 % if (nargin == 0) || isempty(data_dir) || ~file_exist(data_dir)
 if isempty(data_dir) || ~file_exist(data_dir)
-    error('The first argument must be the full path to the tutorial dataset folder.');
+    error('The second argument must be the full path to the tutorial dataset folder.');
 end
 % Subject name
 % SubjectName = '105923';

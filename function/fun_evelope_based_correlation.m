@@ -53,8 +53,8 @@ if sum(strcmp(modality,'meg'))
     if iscell(megSignal)
         for iBand=1:max(size(megSignal))
             megCorr{iBand}=corr(megSignal{iBand}');
-            figure;imagesc(megCorr{iBand});title(['meg corr',iBand]);colorbar;
-            fun_save_figure(['envelope based correlation MEG', iBand])
+            figure;imagesc(megCorr{iBand});title(['meg corr',megMat.bandsFreqs(iBand,1)]);colorbar;
+            fun_save_figure(['envelope based correlation MEG',megMat.bandsFreqs(iBand,1)])
         end
     end
 end
@@ -63,12 +63,12 @@ if sum(strcmp(modality,'fmri'))
     if iscell(fmriSignal)
         for iBand=1:size(fmriSignal,1)
             fmriCorr{iBand}=corr(fmriSignal{iBand}');
-            figure;imagesc(fmriCorr{iBand});title(['fmri corr',iBand]);colorbar;
-            fun_save_figure(['correlation fMRI', iBand])
+            figure;imagesc(fmriCorr{iBand});title(['fmri corr',fmriMat.bandsFreqs(iBand,1)]);colorbar;
+            fun_save_figure(['correlation fMRI', fmriMat.bandsFreqs(iBand,1)])
         end
     elseif ismatrix(fmriSignal)
         fmriCorr=corr(fmriSignal');
-        figure;imagesc(fmriCorr);title(['fmri corr',iBand]);colorbar;
+        figure;imagesc(fmriCorr);title(['fmri corr']);colorbar;
         fun_save_figure(['correlation fMRI'])
     end
 end
@@ -92,16 +92,16 @@ if FLAG_SORTBYLABEL==1
         for iBand=1:size(megSignal,1)
             megCorrSort=megCorr{iBand}([idxSortL;idxSortR+nHemiSphere],:);
             megCorrSort=megCorrSort{iBand}(:,[idxSortL;idxSortR+nHemiSphere]);
-            figure;imagesc(megCorrSort{iBand});title(['meg corr', num2str(iBand)]);colorbar;
+            figure;imagesc(megCorrSort{iBand});title(['meg corr', megMat.bandsFreqs(iBand,1)]);colorbar;
             megCorr=megCorrSort;
-            fun_save_figure(['correlation MEG sorted', iBand])
+            fun_save_figure(['correlation MEG sorted', megMat.bandsFreqs(iBand,1)])
         end
     elseif ismatrix(megSignal)
         megCorrSort=megCorr([idxSortL;idxSortR+nHemiSphere],:);
         megCorrSort=megCorrSort(:,[idxSortL;idxSortR+nHemiSphere]);
         figure;imagesc(megCorrSort);title(['meg corr sorted']);colorbar;
         megCorr=megCorrSort;
-        fun_save_figure(['correlation MEG sorted', iBand])
+        fun_save_figure(['correlation MEG sorted'])
         
     end
 end
