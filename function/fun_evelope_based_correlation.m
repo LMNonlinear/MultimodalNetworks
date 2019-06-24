@@ -53,8 +53,8 @@ if sum(strcmp(modality,'meg'))
     if iscell(megSignal)
         for iBand=1:max(size(megSignal))
             megCorr{iBand}=corr(megSignal{iBand}');
-            figure;imagesc(megCorr{iBand});title(['meg corr',megMat.bandsFreqs(iBand,1)]);colorbar;
-            fun_save_figure(['envelope based correlation MEG',megMat.bandsFreqs(iBand,1)])
+            figure;imagesc(megCorr{iBand});title(['meg corr ',megMat.bandsFreqs{iBand,1}]);colorbar;
+            fun_save_figure(['envelope based correlation MEG ',megMat.bandsFreqs{iBand,1}])
         end
     end
 end
@@ -63,8 +63,8 @@ if sum(strcmp(modality,'fmri'))
     if iscell(fmriSignal)
         for iBand=1:size(fmriSignal,1)
             fmriCorr{iBand}=corr(fmriSignal{iBand}');
-            figure;imagesc(fmriCorr{iBand});title(['fmri corr',fmriMat.bandsFreqs(iBand,1)]);colorbar;
-            fun_save_figure(['correlation fMRI', fmriMat.bandsFreqs(iBand,1)])
+            figure;imagesc(fmriCorr{iBand});title(['fmri corr ',fmriMat.bandsFreqs{iBand,1}]);colorbar;
+            fun_save_figure(['correlation fMRI ', fmriMat.bandsFreqs{iBand,1}])
         end
     elseif ismatrix(fmriSignal)
         fmriCorr=corr(fmriSignal');
@@ -89,12 +89,12 @@ if FLAG_SORTBYLABEL==1
     
     %% meg sort
     if iscell(megSignal)
-        for iBand=1:size(megSignal,1)
-            megCorrSort=megCorr{iBand}([idxSortL;idxSortR+nHemiSphere],:);
-            megCorrSort=megCorrSort{iBand}(:,[idxSortL;idxSortR+nHemiSphere]);
-            figure;imagesc(megCorrSort{iBand});title(['meg corr', megMat.bandsFreqs(iBand,1)]);colorbar;
-            megCorr=megCorrSort;
-            fun_save_figure(['correlation MEG sorted', megMat.bandsFreqs(iBand,1)])
+        for iBand=1:max(size(megSignal))
+            megCorrSort{iBand}=megCorr{iBand}([idxSortL;idxSortR+nHemiSphere],:);
+            megCorrSort{iBand}=megCorrSort{iBand}(:,[idxSortL;idxSortR+nHemiSphere]);
+            figure;imagesc(megCorrSort{iBand});title(['meg corr ', megMat.bandsFreqs{iBand,1}]);colorbar;
+            megCorr{iBand}=megCorrSort{iBand};
+            fun_save_figure(['correlation MEG sorted ', megMat.bandsFreqs{iBand,1}])
         end
     elseif ismatrix(megSignal)
         megCorrSort=megCorr([idxSortL;idxSortR+nHemiSphere],:);
@@ -106,15 +106,16 @@ if FLAG_SORTBYLABEL==1
     end
 end
 %% save
+label=labelMat;
 if FLAG_SORTBYLABEL==1
-    labelOut={labelSortL,labelSortR,idxSortL,idxSortR};
+    labelSorted={labelSortL,labelSortR,idxSortL,idxSortR};
     comment=[modality,'correltion sorted by labels'];
-    corrPath=['.\result\',SubjectName,'suface.correlation.mat'];
-    save(corrPath,'fmriCorr','megCorr','labelOut','comment')
+    corrPath=['.\result\',SubjectName,'_suface.correlation.mat'];
+    save(corrPath,'fmriCorr','megCorr','label','labelSorted','comment','-v7.3')
 elseif FLAG_SORTBYLABEL==0
     comment=[modality,'correltion'];
-    corrPath=['.\result\',SubjectName,'suface.correlation.mat'];
-    save(corrPath,'fmriCorr','megCorr','comment')
+    corrPath=['.\result\',SubjectName,'_suface.correlation.mat'];
+    save(corrPath,'fmriCorr','megCorr','label','comment','-v7.3')
 end
-varargout{1}=fmriCorr;
-varargout{2}=megCorr;
+% varargout{1}=fmriCorr;
+% varargout{2}=megCorr;
