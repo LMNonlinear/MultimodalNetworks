@@ -7,6 +7,7 @@ switch hostname
         %% barinstorm
         addpath('D:\codes\brainstorm\brainstorm_190516\brainstorm3')
         addpath('.\function\')
+        addpath('.\external\')
         brainstorm('setpath')
         %% demo parameter
         ProtocolName='HCPMEGPipeline';
@@ -20,6 +21,7 @@ switch hostname
         %% barinstorm
         addpath('E:\Rigel\codes\brainstorm3')
         addpath('.\function\')
+        addpath('.\external\')
         brainstorm('setpath')
         %% demo parameter
         ProtocolName='HCPMEGPipeline';
