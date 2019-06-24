@@ -15,8 +15,8 @@ load ./temp/config.mat
 if nargin==0||nargin==1
     megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
     megBandMat=load(megBandMatPath);
-    megBandMat=megBandMat.megBand;
-    %     megBandSignal=megBandMat.megBandSignal;
+%     megBandMat=megBandMat.megBand;
+        megBandSignal=megBandMat.megBandSignal;
 elseif nargin==2
     %     megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
     megBandMat=load(megBandMatPath);
