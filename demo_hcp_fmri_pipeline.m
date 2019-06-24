@@ -9,6 +9,6 @@ switch mode
 %         SubjectName = '105923';
         load ./temp/config.mat
         [niiFilename,label]=fun_hcp_fmri_resampling(data_dir,SubjectName);
-        [niftiFilePath]= fun_hcp_fmri_saveas_nifti(SubjectName,niiFilename(1),niiFilename(2));
+        [niftiFilePath]= fun_hcp_fmri_export(SubjectName,niiFilename(1),niiFilename(2));
         toc
 end
