@@ -7,7 +7,7 @@ switch nargin
         filename=char(strcat('.\figure\',timeNow,'.jpg'));
     case 1
         gcfHandle=gcf;
-        filename=varargin;
+        filename=cell2mat(varargin);
     case 2
         gcfHandle=gcf;
         filename=varargin{1};
