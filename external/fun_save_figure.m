@@ -8,6 +8,8 @@ switch nargin
     case 1
         gcfHandle=gcf;
         filename=cell2mat(varargin);
+        filename=char(strcat('.\figure\',filename,'.jpg'));
+
     case 2
         gcfHandle=gcf;
         filename=varargin{1};
