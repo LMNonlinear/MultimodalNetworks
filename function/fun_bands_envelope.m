@@ -15,27 +15,45 @@ load ./temp/config.mat
 if nargin==0||nargin==1
     megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
     megBandMat=load(megBandMatPath);
-%     megBandMat=megBandMat.megBand;
-        megBandSignal=megBandMat.megBandSignal;
+    %     megBandMat=megBandMat.megBand;
+    megBandSignal=megBandMat.megBandSignal;
 elseif nargin==2
     %     megBandMatPath=['.\result\',SubjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
     megBandMat=load(megBandMatPath);
-%     megBandMat=megBandMat.megBand;
+    %     megBandMat=megBandMat.megBand;
 end
 %% process
-startmatlabpool
-parfor iBand = 1:megBandMat.nFreqBands
-    %     for iBand = 1:megBandMat.nFreqBands
-    megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
-    %     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
-    megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
-    %     subplot(megBandMat.nFreqBands,1,iBand)
-    %     plot(megBandMat.megBandSignal{iBand}');hold on;
-    %     plot(megBandHilebertEnvelope{iBand}');
-    %cut head and end parts
-    megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60-1);
+
+
+%% debug, need remove
+[~, hostname] = system('hostname');
+hostname=string(strtrim(hostname));
+switch hostname
+    case 'KBOMATEBOOKXPRO'
+        for iBand = 1:megBandMat.nFreqBands
+            megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
+            megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
+            megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand};
+        end
+    otherwise
+        startmatlabpool
+        parfor iBand = 1:megBandMat.nFreqBands
+            %     for iBand = 1:megBandMat.nFreqBands
+            megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
+            %     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
+            megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
+            %     subplot(megBandMat.nFreqBands,1,iBand)
+            %     plot(megBandMat.megBandSignal{iBand}');hold on;
+            %     plot(megBandHilebertEnvelope{iBand}');
+            %cut head and end parts
+            %             megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand}(:,(megBandMat.sampleRateMeg)*30:(megBandMat.sampleRateMeg)*60-1);
+            megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand};
+        end
+        closematlabpool
 end
-closematlabpool
+
+
+
 
 % figure
 % plot(megBandMat.megBandSignal{1}');hold on;

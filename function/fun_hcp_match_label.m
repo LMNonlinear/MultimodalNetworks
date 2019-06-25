@@ -5,14 +5,14 @@ switch nargin
         load .\temp\config.mat
         fmriNiftiPath=['.\result\',SubjectName,'.4k.surface.fMRI_REST_LR.nii'];
         megNiftiPath=['.\result\',SubjectName,'.4k.source.MEG_REST_LR.nii'];
-        fmriLabelPath={['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii']...
-            ['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']};
+        fmriLabelPath={['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.L.label.gii']...
+            ['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.R.label.gii']};
     case 1
         SubjectName=varargin{1};
         fmriNiftiPath=['.\result\',SubjectName,'.4k.surface.fMRI_REST_LR.nii'];
         megNiftiPath=['.\result\',SubjectName,'.4k.source.MEG_REST_LR.nii'];
-        fmriLabelPath={['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii']...
-            ['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']};
+        fmriLabelPath={['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.L.label.gii']...
+            ['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.R.label.gii']};
     case 4
         SubjectName=varargin{1};
         fmriNiftiPath=varargin{2};
@@ -46,6 +46,15 @@ fmriSignal=squeeze(double(fmriNifti.img));
 megSignal=squeeze(double(megNifti.img));
 labelAll=[fmriLabelL.cdata;fmriLabelR.cdata];
 labelName=fmriLabelL.labels.name;
+%% debug, need remove
+[~, hostname] = system('hostname');
+hostname=string(strtrim(hostname));
+switch hostname
+    case 'KBOMATEBOOKXPRO'
+        fmriSignal=fmriSignal(:,200:500-1);
+        megSignal=megSignal(:,12000:12400-1);
+end
+
 %% SET MEDIAL WALL
 fmriSignal(labelAll==0,:)=0;
 megSignal(labelAll==0,:)=0;

@@ -1,18 +1,17 @@
-% function varargout=fun_cross_spectrum(varargin)
+function varargout=fun_cross_spectrum(varargin)
 modality={'meg','fmri'};
 FLAG_DISPLAY=0;
-%
-% switch nargin
-%     case 0
-load ./temp/config.mat
-%
-%     case 2
-%         SubjectName=varargin{1};
-%         modality=varargin{2};
-% end
+
+switch nargin
+    case 0
+        load ./temp/config.mat
+    case 2
+        SubjectName=varargin{1};
+        modality=varargin{2};
+end
 %% label
-% labelPath=['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.label.mat'];
-% labelMat=load(labelPath);
+labelPath=['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
+labelMat=load(labelPath);
 %% meg
 % if nargin==0||nargin==2
 % if sum(strcmp(modality,'meg'))
@@ -63,7 +62,7 @@ nFreqBands=size(bandBounds,1);
 % mean of bands.
 
 
-% 
+%
 % iFreq = find((TimefreqMat.Freqs >= BandBounds(iBand,1)) & (TimefreqMat.Freqs <= BandBounds(iBand,2)));
 % switch lower(FreqBands{iBand,3})
 % case 'mean', TF_bands(:,:,iBand) = mean(TimefreqMat.TF(:,:,iFreq), 3);
