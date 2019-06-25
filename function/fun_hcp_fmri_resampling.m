@@ -185,8 +185,8 @@ currentSphere={[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectNam
     [data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.R.sphere.32k_fs_LR.surf.gii']};
 newSphere=newSphere;%generate by creat_sphere_template.m with NUM_VERTICES;
 method='ADAP_BARY_AREA';
-labelOut{1}=strrep(labelIn{1},[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\'],['./result/',SubjectName,'.rs.from32k.4k.']);
-labelOut{2}=strrep(labelIn{2},[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\'],['./result/',SubjectName,'.rs.from32k.4k.']);
+labelOut{1}=strrep(labelIn{1},[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName],['./result/',SubjectName,'.rs.from32k.4k']);
+labelOut{2}=strrep(labelIn{2},[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName],['./result/',SubjectName,'.rs.from32k.4k']);
 areaSurf='-area-surfs';
 currentArea={[data_dir,SubjectName,'\T1w\fsaverage_LR32k\',SubjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
     [data_dir,SubjectName,'\T1w\fsaverage_LR32k\',SubjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
