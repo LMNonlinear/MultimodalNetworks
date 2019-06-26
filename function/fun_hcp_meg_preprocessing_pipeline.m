@@ -8,11 +8,11 @@ switch nargin
     case 0
         load ./temp/config.mat
     case 3
-        ProtocolName=varargin{1};
+        protocolName=varargin{1};
         dataDir=varargin{2};
         subjectName=varargin{3};
     case 4 % skip some step
-        ProtocolName=varargin{1};
+        protocolName=varargin{1};
         dataDir=varargin{2};
         subjectName=varargin{3};
         FLAG=varargin{4};
@@ -37,16 +37,16 @@ if ~file_exist(AnatDir) || ~file_exist(Run1File) || ~file_exist(NoiseFile)
 end
 %% ===== CREATE PROTOCOL =====
 % The protocol name has to be a valid folder name (no spaces, no weird characters...)
-% ProtocolName = 'HCPsLoretaPsdBandsPipeline';
+% protocolName = 'HCPsLoretaPsdBandsPipeline';
 % Start brainstorm without the GUI
 if ~brainstorm('status')
     brainstorm nogui
 end
 if FLAG.NEWPROTOCAOL==1
     % Delete existing protocol
-    gui_brainstorm('DeleteProtocol', ProtocolName);
+    gui_brainstorm('DeleteProtocol', protocolName);
     % Create new protocol
-    gui_brainstorm('CreateProtocol', ProtocolName, 0, 0);
+    gui_brainstorm('CreateProtocol', protocolName, 0, 0);
 end
 % Start a new report
 bst_report('Start');

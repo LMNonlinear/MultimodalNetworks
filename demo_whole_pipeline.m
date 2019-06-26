@@ -5,8 +5,8 @@ load ./temp/config.mat
 [niiFilename,label]=fun_hcp_fmri_resampling(dataDir,subjectName);
 [niftiFilePath]= fun_hcp_fmri_export(subjectName,niiFilename(1),niiFilename(2));
 %% meg
-[sHeadmodel,sFilesRest] =fun_hcp_meg_preprocessing_pipeline(ProtocolName,dataDir,subjectName);
-[sSrcResults,sSrcResultsFile,sSrcRestPsdBands]=fun_hcp_meg_inverse_pipeline(ProtocolName,dataDir,subjectName);
+[sHeadmodel,sFilesRest] =fun_hcp_meg_preprocessing_pipeline(protocolName,dataDir,subjectName);
+[sSrcResults,sSrcResultsFile,sSrcRestPsdBands]=fun_hcp_meg_inverse_pipeline(protocolName,dataDir,subjectName);
 [niftiFilePath]= fun_hcp_meg_export(subjectName,sSrcResults.ImageGridAmp);
 %% label
 fmriNiftiPath='.\result\105923.4k.surface.fMRI_REST_LR.nii';

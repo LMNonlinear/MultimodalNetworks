@@ -10,7 +10,7 @@ switch hostname
         addpath('.\external\')
         brainstorm('setpath')
         %% demo parameter
-        ProtocolName='HCPMEGPipeline';
+        protocolName='HCPMEGPipeline';
         dataDir='M:\MEEGfMRI\Data\HCP_S900\';
         subjectName = '105923';
         wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
@@ -24,7 +24,7 @@ switch hostname
         addpath('.\external\')
         brainstorm('setpath')
         %% demo parameter
-        ProtocolName='HCPMEGPipeline';
+        protocolName='HCPMEGPipeline';
         dataDir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
         subjectName = '105923';
         wb_command='E:\Rigel\codes\workbench\bin_windows64\wb_command.exe';
