@@ -16,7 +16,7 @@ if nargin==0||nargin==1
     megBandMatPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
     megBandMat=load(megBandMatPath);
     %     megBandMat=megBandMat.megBand;
-    megBandSignal=megBandMat.megBandSignal;
+    megBandSignal=megBandMat.dtseries;
 % elseif nargin==2
 %     %     megBandMatPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
 %     megBandMat=load(megBandMatPath);
@@ -31,7 +31,7 @@ hostname=string(strtrim(hostname));
 switch hostname
     case 'KBOMATEBOOKXPRO'
         for iBand = 1:megBandMat.nFreqBands
-            megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
+            megBandHilebert{iBand} = hilbert(megBandSignal{iBand}')';
             megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
             megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand};
         end
@@ -39,7 +39,7 @@ switch hostname
         startmatlabpool
         parfor iBand = 1:megBandMat.nFreqBands
             %     for iBand = 1:megBandMat.nFreqBands
-            megBandHilebert{iBand} = hilbert(megBandMat.megBandSignal{iBand}')';
+            megBandHilebert{iBand} = hilbert(megBandSignal{iBand}')';
             %     megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand}).^2;
             megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
             %     subplot(megBandMat.nFreqBands,1,iBand)
@@ -65,7 +65,7 @@ end
 % plot(zscore(yupper));
 %% output
 
-megBandEnvelope= rmfield(megBandMat,'megBandSignal');
+megBandEnvelope= rmfield(megBandMat,'dtseries');
 megBandEnvelope.dtseries=megBandHilebertEnvelope;
 megPathOutput=strrep(megBandMatPath,['band'],['band.envelope']);
 save(megPathOutput,'-struct','megBandEnvelope', '-v7.3');
