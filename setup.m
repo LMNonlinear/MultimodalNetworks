@@ -19,7 +19,7 @@ switch hostname
         save(filename)
     case 'HPCwin'
         %% barinstorm
-        addpath('E:\Rigel\codes\brainstorm3')
+        addpath('E:\Rigel\codes\brainstorm\brainstorm3')
         addpath('.\function\')
         addpath('.\external\')
         brainstorm('setpath')
