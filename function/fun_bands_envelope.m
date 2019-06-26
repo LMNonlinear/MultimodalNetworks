@@ -7,7 +7,7 @@ switch nargin
         subjectName=varargin{1};
     case 2
         subjectName=varargin{1};
-        megBandMatPath=varargin{2};
+        megBandMat=varargin{2};
 end
 load ./temp/config.mat
 
@@ -17,10 +17,10 @@ if nargin==0||nargin==1
     megBandMat=load(megBandMatPath);
     %     megBandMat=megBandMat.megBand;
     megBandSignal=megBandMat.megBandSignal;
-elseif nargin==2
-    %     megBandMatPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
-    megBandMat=load(megBandMatPath);
-    %     megBandMat=megBandMat.megBand;
+% elseif nargin==2
+%     %     megBandMatPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
+%     megBandMat=load(megBandMatPath);
+%     %     megBandMat=megBandMat.megBand;
 end
 %% process
 
@@ -66,7 +66,7 @@ end
 %% output
 
 megBandEnvelope= rmfield(megBandMat,'megBandSignal');
-megBandEnvelope.megBandEnvelope=megBandHilebertEnvelope;
+megBandEnvelope.dtseries=megBandHilebertEnvelope;
 megPathOutput=strrep(megBandMatPath,['band'],['band.envelope']);
 save(megPathOutput,'-struct','megBandEnvelope', '-v7.3');
 

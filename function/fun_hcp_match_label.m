@@ -72,9 +72,11 @@ switch outputType
         fmriPathOutput=strrep(fmriPathOutput,['.nii'],['.mat']);
         megPathOutput=strrep(megNiftiPath,['source'],['source.matched']);
         megPathOutput=strrep(megPathOutput,['.nii'],['.mat']);
-        save(fmriPathOutput,'fmriSignal','-v7.3');
+        dtseries=fmriSignal;
+        save(fmriPathOutput,'dtseries','-v7.3');
         %         bst_save(fmriPathOutput,fmriSignal,'v7.3');
-        save(megPathOutput,'megSignal','-v7.3');
+        dtseries=megSignal;
+        save(megPathOutput,'dtseries','-v7.3');
         %         bst_save(megPathOutput,,megSignal,'v7.3');
 end
 fmriLabelPathOutput=strrep(fmriLabelPath{1},['L.label.gii'],['label.mat']);
