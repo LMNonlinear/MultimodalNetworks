@@ -1,4 +1,4 @@
-function varargout=fun_evelope_based_correlation(varargin)
+function varargout=fun_correlation(varargin)
 modality={'meg','fmri'};
 FLAG_SORTBYLABEL=1;
 %
@@ -29,32 +29,28 @@ if nargin==0||nargin==2||nargin==3
     if sum(strcmp(modality,'meg'))
         megPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
         megMat=load(megPath);
-        %         megSignal=megMat.megBandEnvelope.megBandEnvelope;
-        megSignal=megMat.megBandEnvelope;
+        megSignal=megMat.dtseries;
         
     end
     %% fmri
     if sum(strcmp(modality,'fmri'))
         fmriPath=['.\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
         fmriMat=load(fmriPath);
-        fmriSignal=fmriMat.fmriSignal;
+        fmriSignal=fmriMat.dtseries;
     end
 elseif nargin==6
     labelMat=load(labelPath);
     megMat=load(megPath);
-    %     megSignal=megMat.megBandEnvelope.megBandEnvelope;
-    megSignal=megMat.megBandEnvelope;
+    megSignal=megMat.dtseries;
     fmriMat=load(fmriPath);
-    fmriSignal=fmriMat.fmriSignal;
+    fmriSignal=fmriMat.dtseries;
 end
 %% CALCU CORR
 % meg
 if sum(strcmp(modality,'meg'))
     if iscell(megSignal)
         for iBand=1:max(size(megSignal))
-            megCorr{iBand}=corr(megSignal{iBand}');
-            %             figure;imagesc(megCorr{iBand});title(['meg corr ',megMat.bandsFreqs{iBand,1}]);colorbar;
-            %             fun_save_figure(['correlation MEG ',megMat.bandsFreqs{iBand,1}])
+            megConn{iBand}=corr(megSignal{iBand}');
         end
     end
 end
@@ -62,14 +58,10 @@ end
 if sum(strcmp(modality,'fmri'))
     if iscell(fmriSignal)
         for iBand=1:size(fmriSignal,1)
-            fmriCorr{iBand}=corr(fmriSignal{iBand}');
-            %             figure;imagesc(fmriCorr{iBand});title(['fmri corr ',fmriMat.bandsFreqs{iBand,1}]);colorbar;
-            %             fun_save_figure(['correlation fMRI ', fmriMat.bandsFreqs{iBand,1}])
+            fmriConn{iBand}=corr(fmriSignal{iBand}');
         end
     elseif ismatrix(fmriSignal)
-        fmriCorr=corr(fmriSignal');
-        %         figure;imagesc(fmriCorr);title(['fmri corr']);colorbar;
-        %         fun_save_figure(['correlation fMRI'])
+        fmriConn=corr(fmriSignal');
     end
 end
 
@@ -80,28 +72,20 @@ if FLAG_SORTBYLABEL==1
     nHemiSphere=length(labelMat.labelL);
     [labelSortL,idxSortL] = sort(labelMat.labelL);
     [labelSortR,idxSortR] = sort(labelMat.labelR);
-    %% fmri sort
-    fmriCorrSort=fmriCorr([idxSortL;idxSortR+nHemiSphere],:);
-    fmriCorrSort=fmriCorrSort(:,[idxSortL;idxSortR+nHemiSphere]);
-    fmriCorr=fmriCorrSort;
-%     figure;imagesc(fmriCorrSort);title(['fmri corr sorted']);colorbar;
-%     fun_save_figure(['correlation fMRI sorted'])
     
+    %% fmri sort
+    fmriConnSort=fmriConn([idxSortL;idxSortR+nHemiSphere],:);
+    fmriConnSort=fmriConnSort(:,[idxSortL;idxSortR+nHemiSphere]);
+    %     fmriConn=fmriConnSort;
     %% meg sort
     if iscell(megSignal)
         for iBand=1:max(size(megSignal))
-            megCorrSort{iBand}=megCorr{iBand}([idxSortL;idxSortR+nHemiSphere],:);
-            megCorrSort{iBand}=megCorrSort{iBand}(:,[idxSortL;idxSortR+nHemiSphere]);
-            megCorr{iBand}=megCorrSort{iBand};
-            %             figure;imagesc(megCorrSort{iBand});title(['meg corr ', megMat.bandsFreqs{iBand,1}]);colorbar;
-            %             fun_save_figure(['correlation MEG sorted ', megMat.bandsFreqs{iBand,1}])
+            megConnSort{iBand}=megConn{iBand}([idxSortL;idxSortR+nHemiSphere],:);
+            megConnSort{iBand}=megConnSort{iBand}(:,[idxSortL;idxSortR+nHemiSphere]);
         end
     elseif ismatrix(megSignal)
-        megCorrSort=megCorr([idxSortL;idxSortR+nHemiSphere],:);
-        megCorrSort=megCorrSort(:,[idxSortL;idxSortR+nHemiSphere]);
-        megCorr=megCorrSort;
-        %         figure;imagesc(megCorrSort);title(['meg corr sorted']);colorbar;
-        %         fun_save_figure(['correlation MEG sorted'])
+        megConnSort=megConn([idxSortL;idxSortR+nHemiSphere],:);
+        megConnSort=megConnSort(:,[idxSortL;idxSortR+nHemiSphere]);
     end
 end
 
@@ -112,19 +96,29 @@ ext1=[];
 for iBand=1:1:max(size(megSignal))
     ext2{iBand}=strcat(megMat.bandsFreqs{iBand,1},' band');
 end
-fun_imagesc_two(fmriCorrSort,megCorrSort,title1,title2,ext1,ext2);
-
-%% save
+fun_imagesc_two(fmriConnSort,megConnSort,title1,title2,ext1,ext2);
+close all;
+%% SAVE
 label=labelMat;
 if FLAG_SORTBYLABEL==1
     labelSorted={labelSortL,labelSortR,idxSortL,idxSortR};
-    comment=[modality,'correltion sorted by labels'];
-    corrPath=['.\result\',subjectName,'_suface.correlation.mat'];
-    save(corrPath,'fmriCorr','megCorr','label','labelSorted','comment','-v7.3')
+    comment=['correltion sorted by labels, label and index refer to sorted label mat'];
+    megConnPath=['.\result\',subjectName,'_meg_suface.correlation.mat'];
+    dtconn=megConnSort;
+    save(megConnPath,'dtconn','comment','-v7.3')
+    fmriConnPath=['.\result\',subjectName,'_fmri_suface.correlation.mat'];
+    dtconn=fmriConnSort;
+    save(fmriConnPath,'fmriConn','comment','-v7.3')
 elseif FLAG_SORTBYLABEL==0
-    comment=[modality,'correltion'];
-    corrPath=['.\result\',subjectName,'_suface.correlation.mat'];
-    save(corrPath,'fmriCorr','megCorr','label','comment','-v7.3')
+    comment=['correltion, label and index refer to label mat'];
+    megConnPath=['.\result\',subjectName,'_meg_suface.correlation.mat'];
+    dtconn=megConn;    
+    save(megConnPath,'megConn','comment','-v7.3')
+    fmriConnPath=['.\result\',subjectName,'_fmri_suface.correlation.mat'];
+    dtconn=fmriConn;    
+    save(fmriConnPath,'fmriConn','comment','-v7.3')
 end
-varargout{1}=fmriCorr;
-varargout{2}=megCorr;
+if nargin~=0
+    varargout{1}=fmriConn;
+    varargout{2}=megConn;
+end
