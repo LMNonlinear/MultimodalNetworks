@@ -23,23 +23,23 @@ switch nargin
         load ./temp/config.mat
     case 2
         load ./temp/config.mat
-        data_dir=varargin{1};
-        SubjectName=varargin{2};
+        dataDir=varargin{1};
+        subjectName=varargin{2};
     case 3
         load ./temp/config.mat
-        data_dir=varargin{1};
-        SubjectName=varargin{2};
+        dataDir=varargin{1};
+        subjectName=varargin{2};
         wb_command=varargin{3};
     case 4 % skip some step
         load ./temp/config.mat
-        data_dir=varargin{1};
-        SubjectName=varargin{2};
+        dataDir=varargin{1};
+        subjectName=varargin{2};
         wb_command=varargin{3};
         FLAG=varargin{4};
 end
 %% path
 % wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
-% data_dir='C:\Data\HCP_S900\';
+% dataDir='C:\Data\HCP_S900\';
 pipeline_path=mfilename('fullpath');
 i=strfind(pipeline_path,'\');
 % pipeline_name=pipeline_path(i(end)+1:end);
@@ -75,15 +75,15 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SURFACE DATA RESAMPLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-highResSurface={[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
-    [data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
+highResSurface={[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
+    [dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
 
-highResSphere={[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.L.sphere.32k_fs_LR.surf.gii'],...
-    [data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.R.sphere.32k_fs_LR.surf.gii']};
+highResSphere={[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.L.sphere.32k_fs_LR.surf.gii'],...
+    [dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.R.sphere.32k_fs_LR.surf.gii']};
 
 lowResSphere=newSphere;
-lowResSurface={['./result/',SubjectName,'.L.midthickness.from32k.4k_fs_LR.surf.gii']...
-    ['./result/',SubjectName,'.R.midthickness.from32k.4k_fs_LR.surf.gii']};
+lowResSurface={['./result/',subjectName,'.L.midthickness.from32k.4k_fs_LR.surf.gii']...
+    ['./result/',subjectName,'.R.midthickness.from32k.4k_fs_LR.surf.gii']};
 method='BARYCENTRIC ';
 if FLAG.STRUC_RESAMPLE==1
     system([wb_command, ' -surface-resample ',' ',highResSurface{1},' ',highResSphere{1},' ',lowResSphere{1},' ', method,' ',lowResSurface{1}]);
@@ -123,8 +123,8 @@ if FLAG.DISPLAY==1 && FLAG.STRUC_RESAMPLE==1
     tile_name=strrep(tile_name,'_','\_');
     title(['lowResSurface=',tile_name]);
     
-    set(gcf,'outerposition',get(0,'screensize'));% matlab´°¿Ú×î´ó»¯
-    picname=[pipeline_path,'\figure\',pipeline_name,'_surface_data_resample.fig'];%±£´æµÄÎÄ¼þÃû£ºÈçi=1Ê±£¬picname=1.fig
+    set(gcf,'outerposition',get(0,'screensize'));% matlabï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    picname=[pipeline_path,'\figure\',pipeline_name,'_surface_data_resample.fig'];%ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½i=1Ê±ï¿½ï¿½picname=1.fig
     saveas(gcf,picname)
     picname=strrep(picname,'.fig','.jpg');
     saveas(gcf,picname)
@@ -133,14 +133,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FIX LABEL DATA  (https://wiki.humanconnectome.org/display/PublicData/DIY+fix+for+zeroes+near+medial+wall+in+rfMRI+dtseries+data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-ciftiIn=[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.aparc.32k_fs_LR.dlabel.nii'];
+ciftiIn=[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.aparc.32k_fs_LR.dlabel.nii'];
 direction='COLUMN';
 surfaceDistance='4.0';
 volumeDistance='4.0';
 ciftiOut=ciftiIn;
-badBrainordinateRoi=[data_dir,SubjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.dtseries.nii'];
+badBrainordinateRoi=[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.dtseries.nii'];
 if FLAG.FIX_LABEL_DILATE==1
-    %     ciftiOut=[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.aparc.32k_fs_LR_FIXED.dlabel.nii'];
+    %     ciftiOut=[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.aparc.32k_fs_LR_FIXED.dlabel.nii'];
     %     fun_command(wb_command, '-cifti-dilate ',ciftiIn,direction,surfaceDistance,volumeDistance,ciftiOut,'-nearest',...
     %         '-left-surface',highResSurface{1},'-right-surface',highResSurface{2},'-bad-brainordinate-roi',badBrainordinateRoi);
     disp('not finish LABEL DATA FIX yet, skip...');
@@ -148,15 +148,15 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FIX FUNCTIONAL DATA  (https://wiki.humanconnectome.org/display/PublicData/DIY+fix+for+zeroes+near+medial+wall+in+rfMRI+dtseries+data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-ciftiSignalIn=[data_dir,SubjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.dtseries.nii'];
+ciftiSignalIn=[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.dtseries.nii'];
 direction='COLUMN';
 surfaceDistance='4.0';
 volumeDistance='4.0';
 ciftiSignalOut=ciftiSignalIn;
-badBrainordinateRoi=[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.aparc.32k_fs_LR.dlabel.nii'];
+badBrainordinateRoi=[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.aparc.32k_fs_LR.dlabel.nii'];
 
 if FLAG.FIX_FUNC_DILATE==1
-    %     ciftiOut=[data_dir,SubjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean_Fixed.dtseries.nii'];
+    %     ciftiOut=[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean_Fixed.dtseries.nii'];
     %     fun_command(wb_command, '-cifti-dilate ',ciftiIn,direction,surfaceDistance,volumeDistance,ciftiOut,'-nearest',...
     %         '-left-surface',highResSurface{1},'-right-surface',highResSurface{2},'-bad-brainordinate-roi',badBrainordinateRoi)
     disp('not finish FUNCTIONAL DATA FIX yet, skip...');
@@ -166,7 +166,7 @@ end
 %% LABEL SPERATE (Notice: output is the same as label files)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % sperate surface label from all label in cifti
-ciftiLabelIn=[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.aparc.32k_fs_LR.dlabel.nii'];
+ciftiLabelIn=[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.aparc.32k_fs_LR.dlabel.nii'];
 sepDirection='COLUMN';
 outputType= '-label';
 outputStructure={'CORTEX_LEFT','CORTEX_RIGHT'};
@@ -181,15 +181,15 @@ end
 %% LABEL RESAMPLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 labelIn=outputLabelName;%functional .func.nii
-currentSphere={[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.L.sphere.32k_fs_LR.surf.gii'],...
-    [data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.R.sphere.32k_fs_LR.surf.gii']};
+currentSphere={[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.L.sphere.32k_fs_LR.surf.gii'],...
+    [dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.R.sphere.32k_fs_LR.surf.gii']};
 newSphere=newSphere;%generate by creat_sphere_template.m with NUM_VERTICES;
 method='ADAP_BARY_AREA';
-labelOut{1}=strrep(labelIn{1},[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName],['./result/',SubjectName,'.rs.from32k.4k']);
-labelOut{2}=strrep(labelIn{2},[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName],['./result/',SubjectName,'.rs.from32k.4k']);
+labelOut{1}=strrep(labelIn{1},[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName],['./result/',subjectName,'.rs.from32k.4k']);
+labelOut{2}=strrep(labelIn{2},[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName],['./result/',subjectName,'.rs.from32k.4k']);
 areaSurf='-area-surfs';
-currentArea={[data_dir,SubjectName,'\T1w\fsaverage_LR32k\',SubjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
-    [data_dir,SubjectName,'\T1w\fsaverage_LR32k\',SubjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
+currentArea={[dataDir,subjectName,'\T1w\fsaverage_LR32k\',subjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
+    [dataDir,subjectName,'\T1w\fsaverage_LR32k\',subjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
 newArea=lowResSurface;
 if FLAG.LABEL_RESAMPLE==1
     system([wb_command,' -label-resample',' ',labelIn{1},' ',currentSphere{1},' ',newSphere{1},' ',method,' ',labelOut{1},' ',areaSurf,' ',currentArea{1},' ',newArea{1}]);
@@ -214,17 +214,17 @@ end
 %% FUNCTIONAL DATA RESAMPLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 metricIn=outputSignalName;%functional .func.nii
-currentSphere={[data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.L.sphere.32k_fs_LR.surf.gii'],...
-    [data_dir,SubjectName,'\MNINonLinear\fsaverage_LR32k\',SubjectName,'.R.sphere.32k_fs_LR.surf.gii']};
+currentSphere={[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.L.sphere.32k_fs_LR.surf.gii'],...
+    [dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.R.sphere.32k_fs_LR.surf.gii']};
 newSphere=newSphere;%generate by creat_sphere_template.m with NUM_VERTICES=3000;
 method='ADAP_BARY_AREA';
-% metricOut={['./result/',SubjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.func.gii'],...
-%     ['./result/',SubjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.func.gii']};
-metricOut{1}=strrep(metricIn{1},[data_dir,SubjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\'],['./result/',SubjectName,'.rs.from32k.4k.']);
-metricOut{2}=strrep(metricIn{2},[data_dir,SubjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\'],['./result/',SubjectName,'.rs.from32k.4k.']);
+% metricOut={['./result/',subjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.func.gii'],...
+%     ['./result/',subjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.func.gii']};
+metricOut{1}=strrep(metricIn{1},[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\'],['./result/',subjectName,'.rs.from32k.4k.']);
+metricOut{2}=strrep(metricIn{2},[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\'],['./result/',subjectName,'.rs.from32k.4k.']);
 areaSurf='-area-surfs';
-currentArea={[data_dir,SubjectName,'\T1w\fsaverage_LR32k\',SubjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
-    [data_dir,SubjectName,'\T1w\fsaverage_LR32k\',SubjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
+currentArea={[dataDir,subjectName,'\T1w\fsaverage_LR32k\',subjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
+    [dataDir,subjectName,'\T1w\fsaverage_LR32k\',subjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
 newArea=lowResSurface;
 if FLAG.FUNC_RESAMPLE==1
     system([wb_command,' -metric-resample',' ',metricIn{1},' ',currentSphere{1},' ',newSphere{1},' ',method,' ',metricOut{1},' ',areaSurf,' ',currentArea{1},' ',newArea{1}]);
@@ -272,8 +272,8 @@ if FLAG.DISPLAY==1 && FLAG.NIFITI_OUT==1
     tile_name=strrep(tile_name,'_','\_');
     title(['newArea=',tile_name]);
     
-    set(gcf,'outerposition',get(0,'screensize'));% matlab´°¿Ú×î´ó»¯
-    picname=[pipeline_path,'\figure\',pipeline_name,'_functional_data_resample.fig'];%±£´æµÄÎÄ¼þÃû£ºÈçi=1Ê±£¬picname=1.fig
+    set(gcf,'outerposition',get(0,'screensize'));% matlabï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    picname=[pipeline_path,'\figure\',pipeline_name,'_functional_data_resample.fig'];%ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½i=1Ê±ï¿½ï¿½picname=1.fig
     saveas(gcf,picname)
     picname=strrep(picname,'.fig','.jpg');
     saveas(gcf,picname)
@@ -318,8 +318,8 @@ if FLAG.DISPLAY==1 && FLAG.DISPLAY==1
     tile_name=strrep(tile_name,'_','\_');
     title(['newArea=',tile_name]);
     
-    set(gcf,'outerposition',get(0,'screensize'));% matlab´°¿Ú×î´ó»¯
-    picname=[pipeline_path,'\figure\',pipeline_name,'_functional_data_frame_',num2str(frame),'.fig'];%±£´æµÄÎÄ¼þÃû£ºÈçi=1Ê±£¬picname=1.fig
+    set(gcf,'outerposition',get(0,'screensize'));% matlabï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    picname=[pipeline_path,'\figure\',pipeline_name,'_functional_data_frame_',num2str(frame),'.fig'];%ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½i=1Ê±ï¿½ï¿½picname=1.fig
     saveas(gcf,picname)
     picname=strrep(picname,'.fig','.jpg');
     saveas(gcf,picname)

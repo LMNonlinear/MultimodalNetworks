@@ -11,8 +11,8 @@ switch hostname
         brainstorm('setpath')
         %% demo parameter
         ProtocolName='HCPMEGPipeline';
-        data_dir='M:\MEEGfMRI\Data\HCP_S900\';
-        SubjectName = '105923';
+        dataDir='M:\MEEGfMRI\Data\HCP_S900\';
+        subjectName = '105923';
         wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
         %% save
         filename = './temp/config.mat';
@@ -25,8 +25,8 @@ switch hostname
         brainstorm('setpath')
         %% demo parameter
         ProtocolName='HCPMEGPipeline';
-        data_dir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
-        SubjectName = '105923';
+        dataDir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
+        subjectName = '105923';
         wb_command='E:\Rigel\codes\workbench\bin_windows64\wb_command.exe';
         %% save
         filename = './temp/config.mat';

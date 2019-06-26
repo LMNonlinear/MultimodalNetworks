@@ -3,10 +3,10 @@ switch nargin
     case 0
         load ./temp/config.mat
     case 1
-        SubjectName=varargin{1};
+        subjectName=varargin{1};
 end
 %% label
-labelPath=['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
+labelPath=['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
 labelMat=load(labelPath);
 %% label sort
 nHemiSphere=length(labelMat.labelL);

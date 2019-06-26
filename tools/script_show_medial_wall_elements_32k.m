@@ -5,14 +5,14 @@ addpath('../external/cifti-nan-matlab/')
 addpath('../external/cifti-nonan-matlab/')
 addpath('../external/nifti-spm-matlab/')
 
-% SubjectName=num2str(105923);
+% subjectName=num2str(105923);
 load ../temp/config.mat
 wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
-% data_dir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
+% dataDir='E:\Rigel\MEEGfMRI\Data\HCP_S900\';
 % pipeline_path=mfilename('fullpath');
 %% load surface
-% fmri.surfPath={[data_dir,SubjectName,'\MEG\anatomy\',SubjectName,'.L.midthickness.4k_fs_LR.surf.gii'],...
-%     [data_dir,SubjectName,'\MEG\anatomy\',SubjectName,'.R.midthickness.4k_fs_LR.surf.gii']};
+% fmri.surfPath={[dataDir,subjectName,'\MEG\anatomy\',subjectName,'.L.midthickness.4k_fs_LR.surf.gii'],...
+%     [dataDir,subjectName,'\MEG\anatomy\',subjectName,'.R.midthickness.4k_fs_LR.surf.gii']};
 fmri.surfPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.L.midthickness.32k_fs_LR.surf.gii'...
 'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.R.midthickness.32k_fs_LR.surf.gii'};
 fmri.surf{1}=gifti(fmri.surfPath{1});

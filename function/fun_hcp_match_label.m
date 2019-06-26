@@ -3,23 +3,23 @@ outputType='mat';
 switch nargin
     case 0
         load .\temp\config.mat
-        fmriNiftiPath=['.\result\',SubjectName,'.4k.surface.fMRI_REST_LR.nii'];
-        megNiftiPath=['.\result\',SubjectName,'.4k.source.MEG_REST_LR.nii'];
-        fmriLabelPath={['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.L.label.gii']...
-            ['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.R.label.gii']};
+        fmriNiftiPath=['.\result\',subjectName,'.4k.surface.fMRI_REST_LR.nii'];
+        megNiftiPath=['.\result\',subjectName,'.4k.source.MEG_REST_LR.nii'];
+        fmriLabelPath={['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.L.label.gii']...
+            ['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.R.label.gii']};
     case 1
-        SubjectName=varargin{1};
-        fmriNiftiPath=['.\result\',SubjectName,'.4k.surface.fMRI_REST_LR.nii'];
-        megNiftiPath=['.\result\',SubjectName,'.4k.source.MEG_REST_LR.nii'];
-        fmriLabelPath={['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.L.label.gii']...
-            ['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.R.label.gii']};
+        subjectName=varargin{1};
+        fmriNiftiPath=['.\result\',subjectName,'.4k.surface.fMRI_REST_LR.nii'];
+        megNiftiPath=['.\result\',subjectName,'.4k.source.MEG_REST_LR.nii'];
+        fmriLabelPath={['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.L.label.gii']...
+            ['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.R.label.gii']};
     case 4
-        SubjectName=varargin{1};
+        subjectName=varargin{1};
         fmriNiftiPath=varargin{2};
         megNiftiPath=varargin{3};
         fmriLabelPath=varargin{4};
     case 5
-        SubjectName=varargin{1};
+        subjectName=varargin{1};
         fmriNiftiPath=varargin{2};
         megNiftiPath=varargin{3};
         fmriLabelPath=varargin{4};
@@ -29,14 +29,14 @@ addpath('.\external\nifti-analyze-matlab\');
 addpath('.\external\cifti-nan-matlab\');
 FLAG_DISPLAY=0;
 %% READ DATA
-% fmriNiftiL=nifti(['.\result\',SubjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii']);
-% fmriNiftiR=nifti(['.\result\',SubjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii']);
+% fmriNiftiL=nifti(['.\result\',subjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii']);
+% fmriNiftiR=nifti(['.\result\',subjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii']);
 
 %
 % fmriSignal=[squeeze(fmriNiftiL.img);squeeze(fmriNiftiR.img)];
 % fmriSignal=[squeeze(double(fmriNiftiL.dat));squeeze(double(fmriNiftiR.dat))];
-% fmriLabelL=gifti(['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii']);
-% fmriLabelR=gifti(['.\result\',SubjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']);
+% fmriLabelL=gifti(['.\result\',subjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii']);
+% fmriLabelR=gifti(['.\result\',subjectName,'.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']);
 
 fmriNifti=load_nii(fmriNiftiPath);
 megNifti=load_nii(megNiftiPath);

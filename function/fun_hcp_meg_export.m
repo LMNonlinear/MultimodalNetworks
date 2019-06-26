@@ -8,7 +8,7 @@ switch nargin
         load .\temp\config.mat
         megSignal=varargin{1};
     case 2
-        SubjectName=varargin{1};        
+        subjectName=varargin{1};        
         megSignal=varargin{2};
 end
 addpath('.\external\nifti-analyze-matlab\');
@@ -20,7 +20,7 @@ img=reshape(megSignal,[size(megSignal,1),1,1,size(megSignal,2)]);
 description='Source MEG signal- Create by CCCLAB';
 nii = make_nii(img, [], [], [],description);
 %%
-pathOutput=['.\result\',SubjectName,'.',num2str(round(size(megSignal,1)/2000)),'k.source.MEG_REST_LR.nii'];
+pathOutput=['.\result\',subjectName,'.',num2str(round(size(megSignal,1)/2000)),'k.source.MEG_REST_LR.nii'];
 save_nii(nii,pathOutput);
 varargout{1}=pathOutput;
 end

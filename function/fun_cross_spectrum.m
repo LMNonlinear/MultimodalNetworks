@@ -6,23 +6,23 @@ switch nargin
     case 0
         load ./temp/config.mat
     case 2
-        SubjectName=varargin{1};
+        subjectName=varargin{1};
         modality=varargin{2};
 end
 %% label
-labelPath=['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
+labelPath=['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
 labelMat=load(labelPath);
 %% meg
 % if nargin==0||nargin==2
 % if sum(strcmp(modality,'meg'))
 if ~exist('megSignal','var')||isempty(megSignal)
-    megPath=['.\result\',SubjectName,'.4k.source.matched.MEG_REST_LR.mat'];
+    megPath=['.\result\',subjectName,'.4k.source.matched.MEG_REST_LR.mat'];
     megMat=load(megPath);
     megSignal=megMat.megSignal(1:2,30*250:60*250-1);
 end
 % end
 % if sum(strcmp(modality,'fmri'))
-%     fmriPath=['.\result\',SubjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
+%     fmriPath=['.\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
 %     fmriMat=load(fmriPath);
 %     fmriSignal=fmriMat.fmriSignal;
 % end

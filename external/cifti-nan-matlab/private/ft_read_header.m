@@ -1452,7 +1452,7 @@ switch headerformat
     % give this warning only once
     hdr.label  = {orig.elec.Name};
     hdr.chanunit = {orig.elec.Unit};
-    hdr.subjectname = orig.name;
+    hdr.subjectName = orig.name;
     %warning('using a modified read_micromed_trc() function');
     
     % this should be a column vector

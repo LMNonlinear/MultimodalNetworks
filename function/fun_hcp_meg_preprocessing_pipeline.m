@@ -9,31 +9,31 @@ switch nargin
         load ./temp/config.mat
     case 3
         ProtocolName=varargin{1};
-        data_dir=varargin{2};
-        SubjectName=varargin{3};
+        dataDir=varargin{2};
+        subjectName=varargin{3};
     case 4 % skip some step
         ProtocolName=varargin{1};
-        data_dir=varargin{2};
-        SubjectName=varargin{3};
+        dataDir=varargin{2};
+        subjectName=varargin{3};
         FLAG=varargin{4};
 end
 %%
-% data_dir='M:\MEEGfMRI\Data\HCP_S900\';
+% dataDir='M:\MEEGfMRI\Data\HCP_S900\';
 %% ===== FILES TO IMPORT =====
 % You have to specify the folder in which the tutorial dataset is unzipped
-% if (nargin == 0) || isempty(data_dir) || ~file_exist(data_dir)
-if isempty(data_dir) || ~file_exist(data_dir)
+% if (nargin == 0) || isempty(dataDir) || ~file_exist(dataDir)
+if isempty(dataDir) || ~file_exist(dataDir)
     error('The second argument must be the full path to the tutorial dataset folder.');
 end
 % Subject name
-% SubjectName = '105923';
+% subjectName = '105923';
 % Build the path of the files to import
-AnatDir    = fullfile(data_dir, SubjectName, 'MEG', 'anatomy');
-Run1File   = fullfile(data_dir, SubjectName, 'unprocessed', 'MEG', '3-Restin', '4D', 'c,rfDC');
-NoiseFile  = fullfile(data_dir, SubjectName, 'unprocessed', 'MEG', '1-Rnoise', '4D', 'c,rfDC');
+AnatDir    = fullfile(dataDir, subjectName, 'MEG', 'anatomy');
+Run1File   = fullfile(dataDir, subjectName, 'unprocessed', 'MEG', '3-Restin', '4D', 'c,rfDC');
+NoiseFile  = fullfile(dataDir, subjectName, 'unprocessed', 'MEG', '1-Rnoise', '4D', 'c,rfDC');
 % Check if the folder contains the required files
 if ~file_exist(AnatDir) || ~file_exist(Run1File) || ~file_exist(NoiseFile)
-    error(['The folder ' data_dir ' does not contain subject #105923 from the HCP-MEG distribution.']);
+    error(['The folder ' dataDir ' does not contain subject #105923 from the HCP-MEG distribution.']);
 end
 %% ===== CREATE PROTOCOL =====
 % The protocol name has to be a valid folder name (no spaces, no weird characters...)
@@ -55,16 +55,16 @@ if FLAG.PREPROCESSING==1
     %% ===== IMPORT DATA =====
     % Process: Import anatomy folder
     bst_process('CallProcess', 'process_import_anatomy', [], [], ...
-        'subjectname', SubjectName, ...
+        'subjectName', subjectName, ...
         'mrifile',     {AnatDir, 'HCPv3'}, ...
         'nvertices',   15000);
     % Process: Create link to raw files
     sFilesRun1Raw = bst_process('CallProcess', 'process_import_data_raw', [], [], ...
-        'subjectname',  SubjectName, ...
+        'subjectName',  subjectName, ...
         'datafile',     {Run1File, '4D'}, ...
         'channelalign', 1);
     sFilesNoiseRaw = bst_process('CallProcess', 'process_import_data_raw', [], [], ...
-        'subjectname',  SubjectName, ...
+        'subjectName',  subjectName, ...
         'datafile',     {NoiseFile, '4D'}, ...
         'channelalign', 1);
     %% ===== RESAMPLE ===
@@ -130,7 +130,7 @@ if FLAG.PREPROCESSING==1
     %% ===== ARTIFACT CLEANING =====
     % Process: Select data files in: */*
     sFilesBand = bst_process('CallProcess', 'process_select_files_data', [], [], ...
-        'subjectname', 'All');
+        'subjectName', 'All');
     
     % Process: Select file names with tag: 3-Restin
     sFilesRest = bst_process('CallProcess', 'process_select_tag', sFilesBand, [], ...
@@ -185,7 +185,7 @@ if FLAG.HEADMODEL==1
     %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Process: Generate BEM surfaces
     sBemSurf = bst_process('CallProcess', 'process_generate_bem', sFilesRest, [], ...
-        'subjectname', SubjectName, ...
+        'subjectName', subjectName, ...
         'nscalp',      1922, ...%%%%8004
         'nouter',      1922, ...
         'ninner',      1922, ...
@@ -223,10 +223,10 @@ end
 % % save head model
 % [sHeadmodelFileName,sHeadmodelType, sHeadmodelisAnatomy] = file_fullpath( sHeadmodel.FileName );
 % [sHeadmodelPath, name, ext]=bst_fileparts(sHeadmodelFileName);
-% file_copy(sHeadmodelPath,['.\result\',SubjectName]);
+% file_copy(sHeadmodelPath,['.\result\',subjectName]);
 % save signal
 sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFilesRest, [], ...
-    'subjectname', SubjectName, ...
+    'subjectName', subjectName, ...
     'condition',   '', ...
     'timewindow',  [], ...
     'split',       0, ...
@@ -238,7 +238,7 @@ sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFil
 
 % [sFilesRestFileName,sFilesRestFileType, sFilesRestisAnatomy] = file_fullpath( sFilesRest.FileName );
 % [sFilesRestFilePath, name, ext]=bst_fileparts(sFilesRestFileName);
-% file_copy(sFilesRestFilePath,['.\result\',SubjectName]);
+% file_copy(sFilesRestFilePath,['.\result\',subjectName]);
 
 %copy all
     ProtocolInfo=bst_get('ProtocolInfo');

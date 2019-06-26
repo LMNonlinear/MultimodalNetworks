@@ -6,7 +6,7 @@ switch mode
     case 2
         tic
         load ./temp/config.mat
-        [pathMegBand,megBand]= fun_group_in_freqs_bands(SubjectName);
-        [pathMegBandEnvelope,megBandEnvelope]= fun_bands_envelope(SubjectName,megBand);
+        [pathMegBand,megBand]= fun_group_in_freqs_bands(subjectName);
+        [pathMegBandEnvelope,megBandEnvelope]= fun_bands_envelope(subjectName,megBand);
         toc
 end

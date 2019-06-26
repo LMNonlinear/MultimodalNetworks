@@ -6,14 +6,14 @@ switch nargin
     case 0
         load ./temp/config.mat
     case 2
-        SubjectName=varargin{1};
+        subjectName=varargin{1};
         modality=varargin{2};
     case 3
-        SubjectName=varargin{1};
+        subjectName=varargin{1};
         modality=varargin{2};
         FLAG_SORTBYLABEL=varargin{3};
     case 6
-        SubjectName=varargin{1};
+        subjectName=varargin{1};
         modality=varargin{2};
         FLAG_SORTBYLABEL=varargin{3};
         megPath=varargin{4};
@@ -23,11 +23,11 @@ end
 %% READ DATA
 if nargin==0||nargin==2||nargin==3
     %% label
-    labelPath=['.\result\',SubjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
+    labelPath=['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
     labelMat=load(labelPath);
     %% meg
     if sum(strcmp(modality,'meg'))
-        megPath=['.\result\',SubjectName,'.4k.source.matched.band.envelope.MEG_REST_LR.mat'];
+        megPath=['.\result\',subjectName,'.4k.source.matched.band.envelope.MEG_REST_LR.mat'];
         megMat=load(megPath);
         %         megSignal=megMat.megBandEnvelope.megBandEnvelope;
         megSignal=megMat.megBandEnvelope;
@@ -35,7 +35,7 @@ if nargin==0||nargin==2||nargin==3
     end
     %% fmri
     if sum(strcmp(modality,'fmri'))
-        fmriPath=['.\result\',SubjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
+        fmriPath=['.\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
         fmriMat=load(fmriPath);
         fmriSignal=fmriMat.fmriSignal;
     end
@@ -119,11 +119,11 @@ label=labelMat;
 if FLAG_SORTBYLABEL==1
     labelSorted={labelSortL,labelSortR,idxSortL,idxSortR};
     comment=[modality,'correltion sorted by labels'];
-    corrPath=['.\result\',SubjectName,'_suface.correlation.mat'];
+    corrPath=['.\result\',subjectName,'_suface.correlation.mat'];
     save(corrPath,'fmriCorr','megCorr','label','labelSorted','comment','-v7.3')
 elseif FLAG_SORTBYLABEL==0
     comment=[modality,'correltion'];
-    corrPath=['.\result\',SubjectName,'_suface.correlation.mat'];
+    corrPath=['.\result\',subjectName,'_suface.correlation.mat'];
     save(corrPath,'fmriCorr','megCorr','label','comment','-v7.3')
 end
 varargout{1}=fmriCorr;

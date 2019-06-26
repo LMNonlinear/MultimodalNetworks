@@ -13,8 +13,8 @@ switch nargin
         FLAG.READRESULT=1;
     case 3
         ProtocolName=varargin{1};
-        data_dir=varargin{2};
-        SubjectName=varargin{3};
+        dataDir=varargin{2};
+        subjectName=varargin{3};
         load ./temp/hcp_meg_preprocessing_pipeline.mat
         FLAG.RELOAD=0;
         FLAG.NEWPROTOCAOL=0;
@@ -24,8 +24,8 @@ switch nargin
     case 4
         load ./temp/hcp_meg_preprocessing_pipeline.mat
         ProtocolName=varargin{1};
-        data_dir=varargin{2};
-        SubjectName=varargin{3};
+        dataDir=varargin{2};
+        subjectName=varargin{3};
         timeWindow=varargin{4};
         FLAG.RELOAD=0;
         FLAG.NEWPROTOCAOL=0;
@@ -35,8 +35,8 @@ switch nargin
     case 5 % skip some step
         load ./temp/hcp_meg_preprocessing_pipeline.mat
         ProtocolName=varargin{1};
-        data_dir=varargin{2};
-        SubjectName=varargin{3};
+        dataDir=varargin{2};
+        subjectName=varargin{3};
         FLAG=varargin{4};
         timeWindow=varargin{5};
 end
@@ -45,19 +45,19 @@ end
 %% ===== FILES TO IMPORT =====
 if FLAG.RELOAD==1
     % You have to specify the folder in which the tutorial dataset is unzipped
-    % if (nargin == 0) || isempty(data_dir) || ~file_exist(data_dir)
-    if isempty(data_dir) || ~file_exist(data_dir)
+    % if (nargin == 0) || isempty(dataDir) || ~file_exist(dataDir)
+    if isempty(dataDir) || ~file_exist(dataDir)
         error('The first argument must be the full path to the tutorial dataset folder.');
     end
     % Subject name
-    %     SubjectName = '105923';
+    %     subjectName = '105923';
     % Build the path of the files to import
-    AnatDir    = fullfile(data_dir, SubjectName, 'MEG', 'anatomy');
-    Run1File   = fullfile(data_dir, SubjectName, 'unprocessed', 'MEG', '3-Restin', '4D', 'c,rfDC');
-    NoiseFile  = fullfile(data_dir, SubjectName, 'unprocessed', 'MEG', '1-Rnoise', '4D', 'c,rfDC');
+    AnatDir    = fullfile(dataDir, subjectName, 'MEG', 'anatomy');
+    Run1File   = fullfile(dataDir, subjectName, 'unprocessed', 'MEG', '3-Restin', '4D', 'c,rfDC');
+    NoiseFile  = fullfile(dataDir, subjectName, 'unprocessed', 'MEG', '1-Rnoise', '4D', 'c,rfDC');
     % Check if the folder contains the required files
     if ~file_exist(AnatDir) || ~file_exist(Run1File) || ~file_exist(NoiseFile)
-        error(['The folder ' data_dir ' does not contain subject #105923 from the HCP-MEG distribution.']);
+        error(['The folder ' dataDir ' does not contain subject #105923 from the HCP-MEG distribution.']);
     end
 end
 %% ===== CREATE PROTOCOL =====
@@ -80,7 +80,7 @@ bst_report('Start');
 if FLAG.SAMPLE==1
     % Process: Import MEG/EEG: Time
     sFilesRestImported = bst_process('CallProcess', 'process_import_data_time', sFilesRest, [], ...
-        'subjectname', SubjectName, ...
+        'subjectName', subjectName, ...
         'condition',   '', ...
         'timewindow',  [timeWindow(1), timeWindow(2)], ...% avoid bound effect, we will only use 30-60
         'split',       0, ...
@@ -206,7 +206,7 @@ if FLAG.READRESULT==1
     %     [sSrcRestKernelFileName,sSrcRestKernelType, sSrcRestKernelisAnatomy] = file_fullpath( sSrcRestKernel.FileName );
     %     [sSrcRestKernelPath, name, ext]=bst_fileparts(sSrcRestKernelFileName);
     %     [sSrcRestKernelFolder, name, ext]=bst_fileparts(sSrcRestKernelPath);
-    %     file_copy(sSrcRestKernelFolder,['.\result\',SubjectName]);
+    %     file_copy(sSrcRestKernelFolder,['.\result\',subjectName]);
     ProtocolInfo=bst_get('ProtocolInfo');
     [ProtocolFolder, name, ext]=bst_fileparts(ProtocolInfo.STUDIES);
     file_copy(ProtocolFolder,['.\result\',ProtocolInfo.Comment]);

@@ -1,7 +1,7 @@
 load ..\temp\config.mat
 
-% fmriNiftiPath=['..\result\',SubjectName,'.4k.surface.matched.fMRI_REST_LR.nii'];
-% megNiftiPath=['..\result\',SubjectName,'.4k.source.matched.MEG_REST_LR.nii'];
+% fmriNiftiPath=['..\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.nii'];
+% megNiftiPath=['..\result\',subjectName,'.4k.source.matched.MEG_REST_LR.nii'];
 %
 % sampleRateFmri=1000/750;
 % idxTimeFmri=[1:1200];
@@ -20,8 +20,8 @@ load ..\temp\config.mat
 %%
 clear; close all; clc
 load ..\temp\config.mat
-fmriMatPath=['..\result\',SubjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
-megMatPath=['..\result\',SubjectName,'.4k.source.matched.MEG_REST_LR.mat'];
+fmriMatPath=['..\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
+megMatPath=['..\result\',subjectName,'.4k.source.matched.MEG_REST_LR.mat'];
 
 sampleRateFmri=1000/750;
 idxTimeFmri=[1:1200];
