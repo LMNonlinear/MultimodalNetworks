@@ -11,9 +11,10 @@ load ./temp/config.mat
 %% label
 fmriNiftiPath='.\result\105923.4k.surface.fMRI_REST_LR.nii';
 megNiftiPath='.\result\105923.4k.source.MEG_REST_LR.nii';
-fmriLabelPath={['.\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii'],...
-    ['.\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']};
+fmriLabelPath={['.\result\105923.rs.from32k.4k.aparc.32k_fs_LR.L.label.gii'],...
+    ['.\result\105923.rs.from32k.4k.aparc.32k_fs_LR.R.label.gii']};
 [pathData]=fun_hcp_match_label(subjectName,fmriNiftiPath,megNiftiPath,fmriLabelPath,'mat');
+fun_hcp_sort_label
 %% bands and envelope
 [pathMegBand,megBand]= fun_group_in_freqs_bands(subjectName);
 [pathMegBandEnvelope,megBandEnvelope]= fun_bands_envelope(subjectName,megBand);
