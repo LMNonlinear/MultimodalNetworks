@@ -112,7 +112,7 @@ caxis([colorBarMin,colorBarMax]);
 colormap pink
 
 set(gcf,'outerposition',get(0,'screensize'));
-picname=strcat(title1,' and ',title2);
+picname=strcat(title1,'  and  ',title2);
 fun_save_figure(picname)
 
 % varout{1}=gcf;

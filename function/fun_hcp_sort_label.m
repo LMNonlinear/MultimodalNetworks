@@ -14,8 +14,11 @@ nHemiSphere=length(labelMat.labelL);
 [labelSortR,idxSortR] = sort(labelMat.labelR);
 %% save
 labelRaw=labelMat;
-labelSorted={labelSortL,labelSortR,idxSortL,idxSortR};
-
+labelSorted.attribute=labelRaw.attribute;
+labelSorted.labelSortL=labelSortL;
+labelSorted.labelSortR=labelSortR;
+labelSorted.idxRaw2SortL=idxSortL;
+labelSorted.idxRaw2SortR=idxSortR;
 labelSortedPath=strrep(labelPath,'.4k','.4k.sorted');
 save(labelSortedPath,'labelRaw','labelSorted');
 end
