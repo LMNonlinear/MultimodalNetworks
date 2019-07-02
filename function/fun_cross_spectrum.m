@@ -3,6 +3,7 @@ connMethod='cross spectrum';
 modality={'meg','fmri'};
 FLAG_SORTBYLABEL=1;
 load ./temp/config.mat
+addpath('.\external\parpool\')
 %
 switch nargin
     case 0
@@ -55,9 +56,10 @@ switch hostname
         megConn=repmat(triu(ones(size(megSignal,1) ,size(megSignal,1))),1,1,2);
         megF=zeros(1,2);
     otherwise
+        startmatlabpool
         [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],[],Fs);
         megConn=zeros(size(megSignal,1) ,size(megSignal,1) ,size(megConn,3));
-        for i=1:size(megSignal,1)
+        parfor i=1:size(megSignal,1)
             for j=1:size(megSignal,1)
                 if i<=j
                     [megConn(i,j,:),megF]=cpsd(megSignal(i,:)',megSignal(j,:)',[],[],[],Fs);
@@ -73,13 +75,14 @@ switch hostname
     otherwise
         [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],[],Fs);
         fmriConn=zeros(size(fmriSignal,1) ,size(fmriSignal,1) ,size(fmriConn,3));
-        for i=1:size(fmriSignal,1)
+        parfor i=1:size(fmriSignal,1)
             for j=1:size(fmriSignal,1)
                 if i<=j
                     [fmriConn(i,j,:),fmriF]=cpsd(fmriSignal(i,:)',fmriSignal(j,:)',[],[],[],Fs);
                 end
             end
         end
+        closematlabpool
 end
 %
 for i=1:size(megConn,3)
