@@ -57,14 +57,10 @@ switch hostname
         megF=zeros(1,2);
     otherwise
         startmatlabpool
-        [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],[],Fs);
+        [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],[],megInfo.sampleRate);
         megConn=zeros(size(megSignal,1) ,size(megSignal,1) ,size(megConn,3));
         parfor i=1:size(megSignal,1)
-            for j=1:size(megSignal,1)
-                if i<=j
-                    [megConn(i,j,:),megF]=cpsd(megSignal(i,:)',megSignal(j,:)',[],[],[],Fs);
-                end
-            end
+            [megConn(i,:,:),~]=cpsd(megSignal(i,:)',megSignal',[],[],[],megInfo.sampleRate);
         end
 end
 % fmri
@@ -73,21 +69,17 @@ switch hostname
         fmriConn=repmat(triu(ones(size(fmriSignal,1) ,size(fmriSignal,1))),1,1,2);
         fmriF=zeros(1,2);
     otherwise
-        [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],[],Fs);
+        [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],[],fmriInfo.sampleRate);
         fmriConn=zeros(size(fmriSignal,1) ,size(fmriSignal,1) ,size(fmriConn,3));
         parfor i=1:size(fmriSignal,1)
-            for j=1:size(fmriSignal,1)
-                if i<=j
-                    [fmriConn(i,j,:),fmriF]=cpsd(fmriSignal(i,:)',fmriSignal(j,:)',[],[],[],Fs);
-                end
-            end
+            [fmriConn(i,:,:),~]=cpsd(fmriSignal(i,:)',fmriSignal',[],[],[],fmriInfo.sampleRate);
         end
         closematlabpool
 end
 %
 for i=1:size(megConn,3)
     megConn(:,:,i)=triu(megConn(:,:,i),1)+triu(megConn(:,:,i))';
-    fmriConn(:,:,i)=triu(fmriConn(:,:,i),1)+triu(fmriConn(:,:,i))';    
+    fmriConn(:,:,i)=triu(fmriConn(:,:,i),1)+triu(fmriConn(:,:,i))';
 end
 
 %% SORT BY LABEL
