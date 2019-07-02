@@ -57,13 +57,13 @@ switch hostname
         megF=zeros(1,2);
     otherwise
         startmatlabpool
-        [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],[],megInfo.sampleRate);
+        [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],[],megInfo.sampleRate,'onesided');
         megConn=zeros(size(megSignal,1) ,size(megSignal,1) ,size(megConn,3));
         Fs=megInfo.sampleRate;
         n=size(megSignal,1);
         tempSignal=megSignal';
         parfor i=1:n
-            [megConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],[],Fs);
+            [megConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],[],Fs,'onesided');
         end
 end
 % fmri
@@ -72,13 +72,13 @@ switch hostname
         fmriConn=repmat(triu(ones(size(fmriSignal,1) ,size(fmriSignal,1))),1,1,2);
         fmriF=zeros(1,2);
     otherwise
-        [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],[],fmriInfo.sampleRate);
+        [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],[],fmriInfo.sampleRate,'onesided');
         fmriConn=zeros(size(fmriSignal,1) ,size(fmriSignal,1) ,size(fmriConn,3));
         Fs=fmriInfo.sampleRate;
         n=size(fmriSignal,1);
         tempSignal=fmriSignal';
         parfor i=1:n
-            [fmriConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],[],Fs);
+            [fmriConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],[],Fs,'onesided');
         end
         closematlabpool
 end
