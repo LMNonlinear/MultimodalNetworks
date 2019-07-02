@@ -1,73 +1,144 @@
 function varargout=fun_cross_spectrum(varargin)
+connMethod='cross spectrum';
 modality={'meg','fmri'};
-FLAG_DISPLAY=0;
-
+FLAG_SORTBYLABEL=1;
+load ./temp/config.mat
+%
 switch nargin
     case 0
         load ./temp/config.mat
     case 2
         subjectName=varargin{1};
         modality=varargin{2};
+    case 3
+        subjectName=varargin{1};
+        modality=varargin{2};
+        FLAG_SORTBYLABEL=varargin{3};
+    case 6
+        subjectName=varargin{1};
+        modality=varargin{2};
+        FLAG_SORTBYLABEL=varargin{3};
+        megPath=varargin{4};
+        fmriPath=varargin{5};
+        labelPath=varargin{6};
 end
-%% label
-labelPath=['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
-labelMat=load(labelPath);
-%% meg
-% if nargin==0||nargin==2
-% if sum(strcmp(modality,'meg'))
-if ~exist('megSignal','var')||isempty(megSignal)
-    megPath=['.\result\',subjectName,'.4k.source.matched.MEG_REST_LR.mat'];
+%% READ DATA
+if nargin==0||nargin==2||nargin==3
+    %% label
+    labelPath=['.\result\',subjectName,'.rs.from32k.4k.sorted.aparc.32k_fs_LR.label.mat'];
+    labelMat=load(labelPath);
+    %% meg
+    if sum(strcmp(modality,'meg'))
+        megPath=['.\result\',subjectName,'.4k.source.matched.MEG_REST_LR.mat'];
+        megMat=load(megPath);
+        megSignal=megMat.dtseries;
+    end
+    %% fmri
+    if sum(strcmp(modality,'fmri'))
+        fmriPath=['.\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
+        fmriMat=load(fmriPath);
+        fmriSignal=fmriMat.dtseries;
+    end
+elseif nargin==6
+    labelMat=load(labelPath);
     megMat=load(megPath);
-    megSignal=megMat.megSignal(1:2,30*250:60*250-1);
+    megSignal=megMat.dtseries;
+    fmriMat=load(fmriPath);
+    fmriSignal=fmriMat.dtseries;
 end
-% end
-% if sum(strcmp(modality,'fmri'))
-%     fmriPath=['.\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
-%     fmriMat=load(fmriPath);
-%     fmriSignal=fmriMat.fmriSignal;
-% end
-% end
-%% weltch cross spectrum
 %% cross spectrum
-if sum(strcmp(modality,'meg'))
-    [pxy,f]=cpsd(megSignal',megSignal',[],[],[],250,'mimo'); %should not use mimo?
+[~, hostname] = system('hostname');
+hostname=string(strtrim(hostname));
+% meg
+switch hostname
+    case 'KBOMATEBOOKXPRO'
+        megConn=repmat(triu(ones(size(megSignal,1) ,size(megSignal,1))),1,1,2);
+        megF=zeros(1,2);
+    otherwise
+        [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],[],Fs);
+        megConn=zeros(size(megSignal,1) ,size(megSignal,1) ,size(megConn,3));
+        for i=1:size(megSignal,1)
+            for j=1:size(megSignal,1)
+                if i<=j
+                    [megConn(i,j,:),megF]=cpsd(megSignal(i,:)',megSignal(j,:)',[],[],[],Fs);
+                end
+            end
+        end
 end
-%% coherence
-cxy=[];
-for i=1:size(pxy,2)
-    cxy(:,i,:)=(abs(pxy(:,i,:)).^2)./real(pxy(:,i,i));
+% fmri
+switch hostname
+    case 'KBOMATEBOOKXPRO'
+        fmriConn=repmat(triu(ones(size(fmriSignal,1) ,size(fmriSignal,1))),1,1,2);
+        fmriF=zeros(1,2);
+    otherwise
+        [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],[],Fs);
+        fmriConn=zeros(size(fmriSignal,1) ,size(fmriSignal,1) ,size(fmriConn,3));
+        for i=1:size(fmriSignal,1)
+            for j=1:size(fmriSignal,1)
+                if i<=j
+                    [fmriConn(i,j,:),fmriF]=cpsd(fmriSignal(i,:)',fmriSignal(j,:)',[],[],[],Fs);
+                end
+            end
+        end
 end
-for j=1:size(pxy,3)
-    cxy(:,:,j)=cxy(:,:,j)./real(pxy(:,j,j));
-end
-fs=250;
-tm=0:1/fs:30-(1/fs);
-% f=linspace(0,125,size(cxy_mino,1));
-
-if FLAG_DISPLAY==1
-    figure
-end
-%% bands
-bandsFreqs= {'delta', '2, 4', 'mean';...
-    'theta', '5, 7', 'mean';...
-    'alpha', '8, 12', 'mean';...
-    'beta', '15, 29', 'mean';...
-    'gamma', '30, 90', 'mean';...
-    'gamma1', '30, 59', 'mean';...
-    'gamma2', '60, 90', 'mean'};
-bandBounds = process_tf_bands('GetBounds', bandsFreqs);
-nFreqBands=size(bandBounds,1);
-
-%%
-% mean of bands.
-
-
 %
-% iFreq = find((TimefreqMat.Freqs >= BandBounds(iBand,1)) & (TimefreqMat.Freqs <= BandBounds(iBand,2)));
-% switch lower(FreqBands{iBand,3})
-% case 'mean', TF_bands(:,:,iBand) = mean(TimefreqMat.TF(:,:,iFreq), 3);
-% case 'median', TF_bands(:,:,iBand) = median(TimefreqMat.TF(:,:,iFreq), 3);
-% case 'max', TF_bands(:,:,iBand) = max(TimefreqMat.TF(:,:,iFreq), [], 3);
-% case 'std', TF_bands(:,:,iBand) = std(TimefreqMat.TF(:,:,iFreq), [], 3);
+for i=1:size(megConn,3)
+    megConn(:,:,i)=triu(megConn(:,:,i),1)+triu(megConn(:,:,i))';
+    fmriConn(:,:,i)=triu(fmriConn(:,:,i),1)+triu(fmriConn(:,:,i))';    
+end
+
+%% SORT BY LABEL
+% close all
+if FLAG_SORTBYLABEL==1
+    %% label sort
+    nHemiSphere=length(labelMat.labelRaw.labelL);
+    %     [labelSortL,idxSortL] = sort(labelMat.labelL);
+    %     [labelSortR,idxSortR] = sort(labelMat.labelR);
+    idxSortL=labelMat.labelSorted.idxRaw2SortL;
+    idxSortR=labelMat.labelSorted.idxRaw2SortR;
+    
+    %% fmri sort
+    fmriConnSort=fmriConn([idxSortL;idxSortR+nHemiSphere],:,:);
+    fmriConnSort=fmriConnSort(:,[idxSortL;idxSortR+nHemiSphere],:);
+    %% meg sort
+    if iscell(megSignal)
+        for iBand=1:max(size(megSignal))
+            megConnSort{iBand}=megConn{iBand}([idxSortL;idxSortR+nHemiSphere],:,:);
+            megConnSort{iBand}=megConnSort{iBand}(:,[idxSortL;idxSortR+nHemiSphere],:);
+        end
+    elseif ismatrix(megSignal)
+        megConnSort=megConn([idxSortL;idxSortR+nHemiSphere],:,:);
+        megConnSort=megConnSort(:,[idxSortL;idxSortR+nHemiSphere],:);
+    end
+end
+
+%% PLOT MATRIX
+% title1=['fMRI connectivity- ',connMethod, 'of signal'];
+% title2=['MEG connectivity- ',connMethod, 'of signal'];
+% ext1=[];
+% for iBand=1:1:max(size(megSignal))
+%     ext2{iBand}=strcat(megMat.bandsFreqs{iBand,1},' band');
 % end
+% fun_imagesc_two(fmriConnSort,megConnSort,title1,title2,ext1,ext2);
+% close all;
+%% SAVE
+if FLAG_SORTBYLABEL==1
+    comment=[connMethod, ' sorted by labels, label and index refer to sorted label mat'];
+    connMethod=strrep(connMethod,' ','_');
+    megConnPath=['.\result\',subjectName,'_meg_suface.',connMethod,'.mat'];
+    dtconn=megConnSort;
+    save(megConnPath,'dtconn','megF','comment','-v7.3')
+    fmriConnPath=['.\result\',subjectName,'_fmri_suface.',connMethod,'.mat'];
+    dtconn=fmriConnSort;
+    save(fmriConnPath,'dtconn','fmriF','comment','-v7.3')
+elseif FLAG_SORTBYLABEL==0
+    comment=[connMethod, ', label and index refer to label mat'];
+    connMethod=strrep(connMethod,' ','_');
+    megConnPath=['.\result\',subjectName,'_meg_suface',connMethod,'.mat'];
+    dtconn=megConn;
+    save(megConnPath,'dtconn','megF','comment','-v7.3')
+    fmriConnPath=['.\result\',subjectName,'_fmri_suface',connMethod,'.mat'];
+    dtconn=fmriConn;
+    save(fmriConnPath,'dtconn','fmriF','comment','-v7.3')
+end
 

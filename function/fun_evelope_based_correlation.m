@@ -110,15 +110,15 @@ if FLAG_SORTBYLABEL==1
     save(megConnPath,'dtconn','comment','-v7.3')
     fmriConnPath=['.\result\',subjectName,'_fmri_suface.envelope.correlation.mat'];
     dtconn=fmriConnSort;
-    save(fmriConnPath,'fmriConn','comment','-v7.3')
+    save(fmriConnPath,'dtconn','comment','-v7.3')
 elseif FLAG_SORTBYLABEL==0
     comment=['correltion, label and index refer to label mat'];
     megConnPath=['.\result\',subjectName,'_meg_suface.envelope.correlation.mat'];
     dtconn=megConn;    
-    save(megConnPath,'megConn','comment','-v7.3')
+    save(megConnPath,'dtconn','comment','-v7.3')
     fmriConnPath=['.\result\',subjectName,'_fmri_suface.envelope.correlation.mat'];
     dtconn=fmriConn;    
-    save(fmriConnPath,'fmriConn','comment','-v7.3')
+    save(fmriConnPath,'dtconn','comment','-v7.3')
 end
-varargout{1}=fmriConn;
-varargout{2}=megConn;
+% varargout{1}=fmriConn;
+% varargout{2}=megConn;
