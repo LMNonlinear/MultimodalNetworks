@@ -65,7 +65,7 @@ switch hostname
     otherwise
         startmatlabpool
         [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],125,megInfo.sampleRate);
-        megConn=zeros(size(megSignal,1) ,size(megSignal,1) ,size(megConn,3));
+        megConn=zeros(size(megSignal,1) ,size(megConn,3),size(megSignal,1) );
         Fs=megInfo.sampleRate;
         n=size(megSignal,1);
         tempSignal=megSignal';
@@ -87,7 +87,7 @@ switch hostname
         end
     otherwise
         [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],125,fmriInfo.sampleRate);
-        fmriConn=zeros(size(fmriSignal,1) ,size(fmriSignal,1) ,size(fmriConn,3));
+        fmriConn=zeros(size(fmriSignal,1) ,size(fmriConn,3),size(fmriSignal,1));
         Fs=fmriInfo.sampleRate;
         n=size(fmriSignal,1);
         tempSignal=fmriSignal';
