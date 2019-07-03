@@ -53,8 +53,15 @@ hostname=string(strtrim(hostname));
 % meg
 switch hostname
     case 'KBOMATEBOOKXPRO'
-        megConn=repmat(triu(ones(size(megSignal,1) ,size(megSignal,1))),1,1,2);
-        megF=zeros(1,2);
+        megSignal=ones(3,1000);
+        [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],125,megInfo.sampleRate);
+        megConn=zeros(size(megSignal,1) ,size(megSignal,1) ,size(megConn,3));
+        Fs=megInfo.sampleRate;
+        n=size(megSignal,1);
+        tempSignal=megSignal';
+        for i=1:n
+            [megConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs);
+        end
     otherwise
         startmatlabpool
         [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],125,megInfo.sampleRate);
@@ -69,8 +76,15 @@ end
 % fmri
 switch hostname
     case 'KBOMATEBOOKXPRO'
-        fmriConn=repmat(triu(ones(size(fmriSignal,1) ,size(fmriSignal,1))),1,1,2);
-        fmriF=zeros(1,2);
+        fmriSignal=2*ones(3,1200);
+        [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],125,fmriInfo.sampleRate);
+        fmriConn=zeros(size(fmriSignal,1) ,size(fmriSignal,1) ,size(fmriConn,3));
+        Fs=fmriInfo.sampleRate;
+        n=size(fmriSignal,1);
+        tempSignal=fmriSignal';
+        for i=1:n
+            [fmriConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs);
+        end
     otherwise
         [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],125,fmriInfo.sampleRate);
         fmriConn=zeros(size(fmriSignal,1) ,size(fmriSignal,1) ,size(fmriConn,3));
@@ -83,10 +97,10 @@ switch hostname
         closematlabpool
 end
 %
-for i=1:size(megConn,3)
-    megConn(:,:,i)=triu(megConn(:,:,i),1)+triu(megConn(:,:,i))';
-    fmriConn(:,:,i)=triu(fmriConn(:,:,i),1)+triu(fmriConn(:,:,i))';
-end
+% for i=1:size(megConn,3)
+%     megConn(:,:,i)=triu(megConn(:,:,i),1)+triu(megConn(:,:,i))';
+%     fmriConn(:,:,i)=triu(fmriConn(:,:,i),1)+triu(fmriConn(:,:,i))';
+% end
 
 %% SORT BY LABEL
 % close all
