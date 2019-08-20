@@ -108,8 +108,8 @@ t = 0:1/Fs:5.296;
 tau = 1/400;
 deltaf=Fs/length(t);
 megSignal=zeros(2,length(t));
-megSignal(1,:)=cos(2*pi*100*t)+0.25*randn(size(t));
-megSignal(2,:)=cos(2*pi*100*(t-tau))+0.25*randn(size(t));
+megSignal(1,:)=cos(2*pi*110*t)+cos(2*pi*100*t)+0.25*randn(size(t));
+megSignal(2,:)=cos(2*pi*110*t)+cos(2*pi*100*(t-tau))+0.25*randn(size(t));
 megSignal(3,:)=cos(2*pi*100*t)+0.25*randn(size(t));
 megSignal(4,:)=cos(2*pi*100*(t-tau))+0.25*randn(size(t));
 % for i=1:size(megSignal,1)    
@@ -121,19 +121,19 @@ megSignal(4,:)=cos(2*pi*100*(t-tau))+0.25*randn(size(t));
 % end
 % nfft = max(256,2^nextpow2(length(t)));
 %  select = 1:nfft/2+1;  
+%  
+% [pxy(1,1,:),f]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],[],Fs);
+% pxy=zeros(size(megSignal,1) ,size(megSignal,1) ,size(pxy,3));
+% for i=1:size(megSignal,1)    
+%     for j=1:size(megSignal,1)
+%         if i<=j
+%             [pxy(i,j,:),f]=cpsd(megSignal(i,:)',megSignal(j,:)',[],[],[],Fs);
+%         end
+%     end
+% end
  
-[pxy(1,1,:),f]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],[],Fs);
-pxy=zeros(size(megSignal,1) ,size(megSignal,1) ,size(pxy,3));
-for i=1:size(megSignal,1)    
-    for j=1:size(megSignal,1)
-        if i<=j
-            [pxy(i,j,:),f]=cpsd(megSignal(i,:)',megSignal(j,:)',[],[],[],Fs);
-        end
-    end
-end
- 
-% [pxy,f,Ns,PSD] = xspectrum(megSignal,Fs,Fm,deltaf);
-% % plot(f,squeeze(abs(pxy(1,2,:)))); hold on
+[pxy,f,Ns,PSD] = xspectrum(megSignal,Fs,Fm,deltaf);
+plot(f,squeeze(abs(pxy(1,2,:)))); 
 % [pxy,f]=cpsd(megSignal',megSignal',[],[],[],Fs,'mimo');
 % plot(f,abs(pxy(:,1,2)));
 %%
@@ -142,3 +142,35 @@ end
   y = cos(2*pi*t*100);  % A cosine of 100Hz plus noise
 %   cpsd(x,y,[],[],[],Fs,'twosided');    % Uses default window, overlap & NFFT. 
   cpsd(x,y,[],[],[],Fs);    % Uses default window, overlap & NFFT. 
+%%
+
+% Fs = 1000;
+% Fm=Fs/2;
+% t = 0:1/Fs:5.296;
+% tau = 1/400;
+% deltaf=Fs/length(t);
+% megSignal=zeros(3,length(t));
+% megSignal(1,:)=cos(2*pi*110*t)+0.25*randn(size(t));
+% megSignal(2,:)=cos(2*pi*100*(t-tau))+0.25*randn(size(t));
+% megSignal(3,:)=2*cos(2*pi*100*(t-tau))+0.25*randn(size(t));
+% conn=corr(megSignal')
+% inv(conn)
+
+
+%%
+% set.seed(100)
+% sim_normal_MC=function(length=1000){
+%   X = rep(0,length)
+%   X[1] = rnorm(1)
+%   for(t in 2:length){
+%     X[t]= X[t-1] + rnorm(1)  
+%   }
+%   return(X)
+% }
+% plot(sim_normal_MC())
+
+
+
+
+
+

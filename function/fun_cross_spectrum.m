@@ -54,13 +54,15 @@ hostname=string(strtrim(hostname));
 switch hostname
     case 'KBOMATEBOOKXPRO'
         megSignal=ones(3,1000);
-        [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],125,megInfo.sampleRate);
+%         [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],125,megInfo.sampleRate);
+ [megConn(1,1,:),megF]=xspectrum(megSignal(1,:)')
         megConn=zeros(size(megSignal,1) ,size(megSignal,1) ,size(megConn,3));
         Fs=megInfo.sampleRate;
         n=size(megSignal,1);
         tempSignal=megSignal';
         for i=1:n
-            [megConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs);
+%             [megConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs)';
+
         end
     otherwise
         startmatlabpool
@@ -70,7 +72,7 @@ switch hostname
         n=size(megSignal,1);
         tempSignal=megSignal';
         parfor i=1:n
-            [megConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs);
+            [megConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs)';
         end
 end
 % fmri
@@ -83,7 +85,7 @@ switch hostname
         n=size(fmriSignal,1);
         tempSignal=fmriSignal';
         for i=1:n
-            [fmriConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs);
+            [fmriConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs)';
         end
     otherwise
         [fmriConn(1,1,:),fmriF]=cpsd(fmriSignal(1,:)',fmriSignal(1,:)',[],[],125,fmriInfo.sampleRate);
@@ -92,7 +94,7 @@ switch hostname
         n=size(fmriSignal,1);
         tempSignal=fmriSignal';
         parfor i=1:n
-            [fmriConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs);
+            [fmriConn(i,:,:),~]=cpsd(tempSignal(:,i),tempSignal,[],[],125,Fs)';
         end
         closematlabpool
 end

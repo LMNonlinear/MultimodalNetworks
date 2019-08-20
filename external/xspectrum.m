@@ -26,7 +26,7 @@ function [Svv,F,Ns,PSD] = xspectrum(data,Fs,Fm,deltaf)
 %**************************************************************************
 %% Initialization oF variables...
 NFFT     = round(Fs/deltaf);                            % number of time points per window
-Nw       = 3;                                           % number of windows for Thomson spectral estimate
+Nw       = 1;                                           % number of windows for Thomson spectral estimate
 F        = 0:deltaf:Fm;                                 % frequency vector
 %% Estimation of the Cross Spectrum...
 e       = dpss(NFFT,Nw);                                % discrete prolate spheroidal (Slepian) sequences
