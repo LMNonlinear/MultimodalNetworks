@@ -36,6 +36,12 @@ switch hostname
             megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
             megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand};
         end
+    case 'KBOLABPC'
+        for iBand = 1:megBandMat.nFreqBands
+            megBandHilebert{iBand} = hilbert(megBandSignal{iBand}')';
+            megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
+            megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand};
+        end
     otherwise
         startmatlabpool
         parfor iBand = 1:megBandMat.nFreqBands

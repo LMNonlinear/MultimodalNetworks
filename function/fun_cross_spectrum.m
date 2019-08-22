@@ -55,7 +55,7 @@ switch hostname
     case 'KBOMATEBOOKXPRO'
         megSignal=ones(3,1000);
 %         [megConn(1,1,:),megF]=cpsd(megSignal(1,:)',megSignal(1,:)',[],[],125,megInfo.sampleRate);
- [megConn(1,1,:),megF]=xspectrum(megSignal(1,:)')
+        [megConn(1,1,:),megF]=xspectrum(megSignal(1,:)')
         megConn=zeros(size(megSignal,1) ,size(megSignal,1) ,size(megConn,3));
         Fs=megInfo.sampleRate;
         n=size(megSignal,1);

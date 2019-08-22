@@ -53,6 +53,9 @@ switch hostname
     case 'KBOMATEBOOKXPRO'
         fmriSignal=fmriSignal(:,200:500-1);
         megSignal=megSignal(:,12000:12400-1);
+    case 'KBOLABPC'
+        fmriSignal=fmriSignal(:,200:500-1);
+        megSignal=megSignal(:,12000:12400-1);
 end
 
 %% SET MEDIAL WALL
