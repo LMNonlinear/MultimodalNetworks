@@ -34,7 +34,7 @@ end
 %% demo parameter
 subjectName = '105923';
 protocolName='HCPMEGPipeline';%for brainstorm hcp meg preprocessing and inverse pipeline
-
+rootPath=pwd;
 %% default parameter for processing signal
 %not finish passing to all place needed
 %fmri

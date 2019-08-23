@@ -17,7 +17,7 @@ fmriLabelPath={['.\result\105923.rs.from32k.4k.aparc.32k_fs_LR.L.label.gii'],...
 fun_hcp_sort_label
 %% wavelet
 
-
+fun_partial_correlation
 
 %% partial correlation of time-freq 
 
