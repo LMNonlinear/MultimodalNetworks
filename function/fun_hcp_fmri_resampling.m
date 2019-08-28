@@ -82,8 +82,8 @@ highResSphere={[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName
     [dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.R.sphere.32k_fs_LR.surf.gii']};
 
 lowResSphere=newSphere;
-lowResSurface={['./result/',subjectName,'.L.midthickness.from32k.4k_fs_LR.surf.gii']...
-    ['./result/',subjectName,'.R.midthickness.from32k.4k_fs_LR.surf.gii']};
+lowResSurface={['./result/',subjectName,'.L.midthickness.from32k.',kiloVertices,'.fs_LR.surf.gii']...
+    ['./result/',subjectName,'.R.midthickness.from32k.',kiloVertices,'.fs_LR.surf.gii']};
 method='BARYCENTRIC ';
 if FLAG.STRUC_RESAMPLE==1
     system([wb_command, ' -surface-resample ',' ',highResSurface{1},' ',highResSphere{1},' ',lowResSphere{1},' ', method,' ',lowResSurface{1}]);
