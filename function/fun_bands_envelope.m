@@ -13,15 +13,15 @@ load ./temp/config.mat
 
 %% read data
 if nargin==0||nargin==1
-    megBandMatPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
+    megBandMatPath=['.\result\',subjectName,'.',kiloVertices,'.source.matched.band.MEG_REST_LR.mat'];
     megBandMat=load(megBandMatPath);
     %     megBandMat=megBandMat.megBand;
     megBandSignal=megBandMat.dtseries;
 elseif nargin==2
-%     %     megBandMatPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
+%     %     megBandMatPath=['.\result\',subjectName,'.',kiloVertices,'.source.matched.band.MEG_REST_LR.mat'];
 %     megBandMat=load(megBandMatPath);
     megBandSignal=megBandMat.dtseries;
-    megBandMatPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
+    megBandMatPath=['.\result\',subjectName,'.',kiloVertices,'.source.matched.band.MEG_REST_LR.mat'];
 end
 %% process
 

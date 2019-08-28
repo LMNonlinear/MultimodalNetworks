@@ -55,6 +55,9 @@ megInfo.bandsFreqs= {'delta', '2, 4', 'mean','3','2';...
     'gamma2', '60, 90', 'mean','75','30'};
 megInfo.bandBounds = process_tf_bands('GetBounds', megInfo.bandsFreqs);
 megInfo.nFreqBands=size(megInfo.bandBounds,1);
+%%
+numVertices=2000;%number of vertices of hemisphere
+kiloVertices=[num2str(round(numVertices/1000)),'k'];
 %% file folder
 if exist('temp','dir')==0
    mkdir('temp');

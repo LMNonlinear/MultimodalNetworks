@@ -6,7 +6,7 @@ switch nargin
         subjectName=varargin{1};
 end
 %% label
-labelPath=['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
+labelPath=['.\result\',subjectName,'.rs.from32k.',kiloVertices,'.aparc.32k_fs_LR.label.mat'];
 labelMat=load(labelPath);
 %% label sort
 nHemiSphere=length(labelMat.labelL);
@@ -19,6 +19,6 @@ labelSorted.labelSortL=labelSortL;
 labelSorted.labelSortR=labelSortR;
 labelSorted.idxRaw2SortL=idxSortL;
 labelSorted.idxRaw2SortR=idxSortR;
-labelSortedPath=strrep(labelPath,'.4k','.4k.sorted');
+labelSortedPath=strrep(labelPath,'.',kiloVertices,'','.',kiloVertices,'.sorted');
 save(labelSortedPath,'labelRaw','labelSorted');
 end

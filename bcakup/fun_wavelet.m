@@ -14,17 +14,17 @@ end
 %%
 switch nargin
     case 0
-        megMatPath=['.\result\',subjectName,'.4k.source.matched.MEG_REST_LR.mat'];
+        megMatPath=['.\result\',subjectName,'.',kiloVertices,'.source.matched.MEG_REST_LR.mat'];
         megMat=load(megMatPath);
         megSignal=megMat.dtseries;
-        fmriMatPath=['.\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
+        fmriMatPath=['.\result\',subjectName,'.',kiloVertices,'.surface.matched.fMRI_REST_LR.mat'];
         fmriMat=load(fmriMatPath);
         fmriSignal=fmriMat.dtseries;
     case 1
-        megMatPath=['.\result\',subjectName,'.4k.source.matched.MEG_REST_LR.mat'];
+        megMatPath=['.\result\',subjectName,'.',kiloVertices,'.source.matched.MEG_REST_LR.mat'];
         megMat=load(megMatPath);
         megSignal=megMat.dtseries;
-        fmriMatPath=['.\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
+        fmriMatPath=['.\result\',subjectName,'.',kiloVertices,'.surface.matched.fMRI_REST_LR.mat'];
         fmriMat=load(fmriMatPath);
         fmriSignal=fmriMat.dtseries;
 end

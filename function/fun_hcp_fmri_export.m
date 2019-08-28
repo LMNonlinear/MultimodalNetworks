@@ -3,8 +3,8 @@ function varargout= fun_hcp_fmri_saveas_nifti(varargin)
 switch nargin
     case 0
         load .\temp\config.mat
-        fmriNiftiL=nifti(['.\result\',subjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii']);
-        fmriNiftiR=nifti(['.\result\',subjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii']);
+        fmriNiftiL=nifti(['.\result\',subjectName,'.rs.from32k.',kiloVertices,'.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii']);
+        fmriNiftiR=nifti(['.\result\',subjectName,'.rs.from32k.',kiloVertices,'.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii']);
         fmriSignal=[squeeze(double(fmriNiftiL.dat));squeeze(double(fmriNiftiR.dat))];
     case 1
         load .\temp\config.mat

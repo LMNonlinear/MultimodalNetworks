@@ -23,18 +23,18 @@ end
 %% READ DATA
 if nargin==0||nargin==2||nargin==3
     %% label
-    labelPath=['.\result\',subjectName,'.rs.from32k.4k.aparc.32k_fs_LR.label.mat'];
+    labelPath=['.\result\',subjectName,'.rs.from32k.',kiloVertices,'.aparc.32k_fs_LR.label.mat'];
     labelMat=load(labelPath);
     %% meg
     if sum(strcmp(modality,'meg'))
-        megPath=['.\result\',subjectName,'.4k.source.matched.band.MEG_REST_LR.mat'];
+        megPath=['.\result\',subjectName,'.',kiloVertices,'.source.matched.band.MEG_REST_LR.mat'];
         megMat=load(megPath);
         megSignal=megMat.dtseries;
         
     end
     %% fmri
     if sum(strcmp(modality,'fmri'))
-        fmriPath=['.\result\',subjectName,'.4k.surface.matched.fMRI_REST_LR.mat'];
+        fmriPath=['.\result\',subjectName,'.',kiloVertices,'.surface.matched.fMRI_REST_LR.mat'];
         fmriMat=load(fmriPath);
         fmriSignal=fmriMat.dtseries;
     end

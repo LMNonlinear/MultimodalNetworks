@@ -11,7 +11,7 @@ end
 
 %% read data
 if nargin==0||nargin==1
-    megMatPath=['.\result\',subjectName,'.4k.source.matched.MEG_REST_LR.mat'];
+    megMatPath=['.\result\',subjectName,'.',kiloVertices,'.source.matched.MEG_REST_LR.mat'];
     sampleRateMeg=int32(250);%raw data is 2034.5101Hz, need as an iput
     indexTimeMeg=[sampleRateMeg*30:sampleRateMeg*60-1];
     timeMeg=double(indexTimeMeg-indexTimeMeg(1))/double(sampleRateMeg);

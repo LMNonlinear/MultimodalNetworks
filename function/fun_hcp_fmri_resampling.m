@@ -16,7 +16,7 @@ FLAG.FUNC_RESAMPLE=1;
 FLAG.DISPLAY=0;
 FLAG.NIFITI_OUT=1;
 %%
-NumVertices=4000;
+numVertices=4000;
 %%
 switch nargin
     case 0
@@ -54,11 +54,11 @@ tic
 %% CREAT NEW SPHERE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %path to store
-newSphere= {'./result/Sphere.4k.L.surf.gii',...
-    './result/Sphere.4k.R.surf.gii'};
+newSphere= {['./result/Sphere.',kiloVertices,'.L.surf.gii'],...
+    ['./result/Sphere.',kiloVertices,'.R.surf.gii']};
 % create sphere by workbench/ the sphere in freesurfer atlas
 if FLAG.SPHERE_RESAMPLE==1
-    system([wb_command ' -surface-create-sphere',' ',num2str(NumVertices),' ',newSphere{2}]);
+    system([wb_command ' -surface-create-sphere',' ',num2str(numVertices),' ',newSphere{2}]);
     system([wb_command ' -surface-flip-lr',' ',newSphere{2},' ', newSphere{1}]);
     system([wb_command ' -set-structure',' ',newSphere{2},' CORTEX_RIGHT']);
     system([wb_command ' -set-structure',' ',newSphere{1},' CORTEX_LEFT']);
@@ -89,6 +89,13 @@ if FLAG.STRUC_RESAMPLE==1
     system([wb_command, ' -surface-resample ',' ',highResSurface{1},' ',highResSphere{1},' ',lowResSphere{1},' ', method,' ',lowResSurface{1}]);
     system([wb_command, ' -surface-resample ',' ',highResSurface{2},' ',highResSphere{2},' ',lowResSphere{2},' ', method,' ',lowResSurface{2}]);
 end
+lowResSurfaceGii{1}=gifti(lowResSurface{1});
+lowResSurfaceGii{2}=gifti(lowResSurface{2});
+numVerticesLR{1}=max(size(lowResSurfaceGii{1}.vertices));
+numVerticesLR{2}=max(size(lowResSurfaceGii{2}.vertices));
+numVerticesLR{3}=numVerticesLR{1}+numVerticesLR{2};
+filename = './temp/config.mat';
+save(filename,'numVerticesLR','-append')
 if FLAG.DISPLAY==1 && FLAG.STRUC_RESAMPLE==1
     figure
     subplot(2,2,1)
@@ -123,7 +130,7 @@ if FLAG.DISPLAY==1 && FLAG.STRUC_RESAMPLE==1
     tile_name=strrep(tile_name,'_','\_');
     title(['lowResSurface=',tile_name]);
     
-    set(gcf,'outerposition',get(0,'screensize'));% matlab�������
+    set(gcf,'outerposition',get(0,'screensize'));% matlab�������?
     picname=[pipeline_path,'\figure\',pipeline_name,'_surface_data_resample.fig'];%������ļ�������i=1ʱ��picname=1.fig
     saveas(gcf,picname)
     picname=strrep(picname,'.fig','.jpg');
@@ -185,8 +192,8 @@ currentSphere={[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName
     [dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.R.sphere.32k_fs_LR.surf.gii']};
 newSphere=newSphere;%generate by creat_sphere_template.m with NUM_VERTICES;
 method='ADAP_BARY_AREA';
-labelOut{1}=strrep(labelIn{1},[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName],['./result/',subjectName,'.rs.from32k.4k']);
-labelOut{2}=strrep(labelIn{2},[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName],['./result/',subjectName,'.rs.from32k.4k']);
+labelOut{1}=strrep(labelIn{1},[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName],['./result/',subjectName,'.rs.from32k.',kiloVertices]);
+labelOut{2}=strrep(labelIn{2},[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName],['./result/',subjectName,'.rs.from32k.',kiloVertices]);
 areaSurf='-area-surfs';
 currentArea={[dataDir,subjectName,'\T1w\fsaverage_LR32k\',subjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
     [dataDir,subjectName,'\T1w\fsaverage_LR32k\',subjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
@@ -218,10 +225,10 @@ currentSphere={[dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName
     [dataDir,subjectName,'\MNINonLinear\fsaverage_LR32k\',subjectName,'.R.sphere.32k_fs_LR.surf.gii']};
 newSphere=newSphere;%generate by creat_sphere_template.m with NUM_VERTICES=3000;
 method='ADAP_BARY_AREA';
-% metricOut={['./result/',subjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.func.gii'],...
-%     ['./result/',subjectName,'.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.func.gii']};
-metricOut{1}=strrep(metricIn{1},[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\'],['./result/',subjectName,'.rs.from32k.4k.']);
-metricOut{2}=strrep(metricIn{2},[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\'],['./result/',subjectName,'.rs.from32k.4k.']);
+% metricOut={['./result/',subjectName,'.rs.from32k.',kiloVertices,'.rfMRI_REST1_LR_Atlas_hp2000_clean.L.func.gii'],...
+%     ['./result/',subjectName,'.rs.from32k.',kiloVertices,'.rfMRI_REST1_LR_Atlas_hp2000_clean.R.func.gii']};
+metricOut{1}=strrep(metricIn{1},[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\'],['./result/',subjectName,'.rs.from32k.',kiloVertices,'.']);
+metricOut{2}=strrep(metricIn{2},[dataDir,subjectName,'\MNINonLinear\Result\rfMRI_REST1_LR\'],['./result/',subjectName,'.rs.from32k.',kiloVertices,'.']);
 areaSurf='-area-surfs';
 currentArea={[dataDir,subjectName,'\T1w\fsaverage_LR32k\',subjectName,'.L.midthickness.32k_fs_LR.surf.gii'],...
     [dataDir,subjectName,'\T1w\fsaverage_LR32k\',subjectName,'.R.midthickness.32k_fs_LR.surf.gii']};
@@ -272,7 +279,7 @@ if FLAG.DISPLAY==1 && FLAG.NIFITI_OUT==1
     tile_name=strrep(tile_name,'_','\_');
     title(['newArea=',tile_name]);
     
-    set(gcf,'outerposition',get(0,'screensize'));% matlab�������
+    set(gcf,'outerposition',get(0,'screensize'));% matlab�������?
     picname=[pipeline_path,'\figure\',pipeline_name,'_functional_data_resample.fig'];%������ļ�������i=1ʱ��picname=1.fig
     saveas(gcf,picname)
     picname=strrep(picname,'.fig','.jpg');
@@ -318,7 +325,7 @@ if FLAG.DISPLAY==1 && FLAG.DISPLAY==1
     tile_name=strrep(tile_name,'_','\_');
     title(['newArea=',tile_name]);
     
-    set(gcf,'outerposition',get(0,'screensize'));% matlab�������
+    set(gcf,'outerposition',get(0,'screensize'));% matlab�������?
     picname=[pipeline_path,'\figure\',pipeline_name,'_functional_data_frame_',num2str(frame),'.fig'];%������ļ�������i=1ʱ��picname=1.fig
     saveas(gcf,picname)
     picname=strrep(picname,'.fig','.jpg');

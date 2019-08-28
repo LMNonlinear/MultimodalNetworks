@@ -4,7 +4,7 @@ modality={'meg','fmri'};
 load ./temp/config.mat
 
 if ~exist('megSignal','var')||isempty(megSignal)
-    megPath=['.\result\',subjectName,'.4k.source.matched.band.envelope.MEG_REST_LR.mat'];
+    megPath=['.\result\',subjectName,'.',kiloVertices,'.source.matched.band.envelope.MEG_REST_LR.mat'];
     megMat=load(megPath);
     for i=1:megMat.megBandEnvelope.nFreqBands        
         megSignal{i}=megMat.megBandEnvelope.megBandEnvelope{i};

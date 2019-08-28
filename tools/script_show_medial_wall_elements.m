@@ -20,8 +20,8 @@ fmri.surf{2}=gifti(fmri.surfPath{2});
 fmri.surfFaces=[fmri.surf{1}.faces; fmri.surf{2}.faces+size(fmri.surf{1}.vertices,1)];
 fmri.surfVertices=[fmri.surf{1}.vertices; fmri.surf{2}.vertices];
 %% extract label from label file(automatic cortical parcellation )
-fmri.aparcPath={['..\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.L.label.gii'],...
-    ['..\result\105923.rs.from32k.4k.105923.aparc.32k_fs_LR.R.label.gii']};
+fmri.aparcPath={['..\result\105923.rs.from32k.',kiloVertices,'.105923.aparc.32k_fs_LR.L.label.gii'],...
+    ['..\result\105923.rs.from32k.',kiloVertices,'.105923.aparc.32k_fs_LR.R.label.gii']};
 % fmri.aparcPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.L.aparc.32k_fs_LR.label.gii'...
 % 'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\fsaverage_LR32k\105923.R.aparc.32k_fs_LR.label.gii'};
 fmri.aparc{1}=gifti(fmri.aparcPath{1});
@@ -37,8 +37,8 @@ fmri.aparcLabelCollosum=fmri.aparcLabelCollosum(:);
 % fmri.aparcDlabel=ciftiopen(fmri.aparcDlabelPath,wb_command);
 
 %% extract label from signal file
-fmri.signalPath={'..\result\105923.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii'...
-    '..\result\105923.rs.from32k.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
+fmri.signalPath={'..\result\105923.rs.from32k.',kiloVertices,'.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii'...
+    '..\result\105923.rs.from32k.',kiloVertices,'.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
 % fmri.signalPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii',...
 % 'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
 [fmri.signalCell,nifti_struct]=niftiopen(fmri.signalPath);
@@ -49,8 +49,8 @@ fmri.signalLabelCollosum(fmri.signalLabelCollosum==0)=-1;
 fmri.signalLabelCollosum(fmri.signalLabelCollosum~=-1)=0;
 fmri.signalLabelCollosum=fmri.signalLabelCollosum(:);
 % %% extract label from fixed signal file
-% % fmri.signalPath={'.\data\105923.rs.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii'...
-% %     '.\data\105923.rs.4k.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
+% % fmri.signalPath={'.\data\105923.rs.',kiloVertices,'.rfMRI_REST1_LR_Atlas_hp2000_clean.L.nii'...
+% %     '.\data\105923.rs.',kiloVertices,'.rfMRI_REST1_LR_Atlas_hp2000_clean.R.nii'};
 % fmri.signalFixedPath={'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean_Fixed.L.nii',...
 % 'M:\MEEGfMRI\Data\HCP_S900\105923\MNINonLinear\Result\rfMRI_REST1_LR\rfMRI_REST1_LR_Atlas_hp2000_clean_Fixed.R.nii'};
 % [fmri.signalFixedCell,nifti_struct]=niftiopen(fmri.signalFixedPath);
