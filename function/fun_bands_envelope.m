@@ -1,8 +1,7 @@
 function varargout= fun_bands_envelope(varargin)
 addpath('./external/parpool/');
+load .\temp\config.mat
 switch nargin
-    case 0
-        load ./temp/config.mat
     case 1
         subjectName=varargin{1};
     case 2
@@ -29,20 +28,15 @@ end
 %% debug, need remove
 [~, hostname] = system('hostname');
 hostname=string(strtrim(hostname));
-switch hostname
-    case 'KBOMATEBOOKXPRO'
+if isDebug==1
+    
         for iBand = 1:megBandMat.nFreqBands
             megBandHilebert{iBand} = hilbert(megBandSignal{iBand}')';
             megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
             megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand};
         end
-    case 'KBOLABPC'
-        for iBand = 1:megBandMat.nFreqBands
-            megBandHilebert{iBand} = hilbert(megBandSignal{iBand}')';
-            megBandHilebertEnvelope{iBand}=abs(megBandHilebert{iBand});
-            megBandHilebertEnvelope{iBand}=megBandHilebertEnvelope{iBand};
-        end
-    otherwise
+   
+    else
         startmatlabpool
         parfor iBand = 1:megBandMat.nFreqBands
             %     for iBand = 1:megBandMat.nFreqBands

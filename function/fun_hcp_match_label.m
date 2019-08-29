@@ -1,8 +1,8 @@
 function varargout= fun_hcp_match_label(varargin)
 outputType='mat';
+load .\temp\config.mat
 switch nargin
-    case 0
-        load .\temp\config.mat
+    case 0        
         fmriNiftiPath=['.\result\',subjectName,'.',kiloVertices,'.surface.fMRI_REST_LR.nii'];
         megNiftiPath=['.\result\',subjectName,'.',kiloVertices,'.source.MEG_REST_LR.nii'];
         fmriLabelPath={['.\result\',subjectName,'.rs.from32k.',kiloVertices,'.aparc.32k_fs_LR.L.label.gii']...
@@ -49,11 +49,10 @@ labelName=fmriLabelL.labels.name;
 %% debug, need remove
 [~, hostname] = system('hostname');
 hostname=string(strtrim(hostname));
-switch hostname
-    case 'KBOMATEBOOKXPRO'
+if isDebug=1
         fmriSignal=fmriSignal(:,200:500-1);
         megSignal=megSignal(:,12000:12400-1);
-    case 'KBOLABPC'
+else
         fmriSignal=fmriSignal(:,200:500-1);
         megSignal=megSignal(:,12000:12400-1);
 end

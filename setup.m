@@ -4,6 +4,7 @@ restoredefaultpath
 hostname=string(strtrim(hostname));
 switch hostname
     case 'KBOMATEBOOKXPRO'
+        isDebug=1;
         %% barinstorm
         addpath('D:\codes\brainstorm\brainstorm_190516\brainstorm3')
         addpath('.\function\')
@@ -13,6 +14,7 @@ switch hostname
         dataDir='M:\MEEGfMRI\Data\HCP_S900\';
         wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
     case 'KBOLABPC'
+        isDebug=1;
         %% barinstorm
         addpath('F:\codes\brainstorm\brainstorm_190820\brainstorm3')
         addpath('.\function\')
