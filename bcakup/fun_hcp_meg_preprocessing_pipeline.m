@@ -59,7 +59,6 @@ if FLAG.PREPROCESSING==1
         'subjectname', subjectName, ...
         'mrifile',     {AnatDir, 'HCPv3'}, ...
         'nvertices',   15000);
-    
     % Process: Create link to raw files
     sFilesRun1Raw = bst_process('CallProcess', 'process_import_data_raw', [], [], ...
         'subjectname',  subjectName, ...
@@ -69,7 +68,6 @@ if FLAG.PREPROCESSING==1
         'subjectname',  subjectName, ...
         'datafile',     {NoiseFile, '4D'}, ...
         'channelalign', 1);
-    fun_hcp_meg_load_new_surface(subjectName);
     %% ===== RESAMPLE ===
     % Process: Resample: 250Hz
     sFilesRun1Resample = bst_process('CallProcess', 'process_resample', sFilesRun1Raw, [], ...
@@ -83,11 +81,8 @@ if FLAG.PREPROCESSING==1
     bst_process('CallProcess', 'process_delete', [sFilesRun1Raw, sFilesNoiseRaw], [], ...
         'target', 2);  % Delete folders
     sFilesRawResample = [sFilesRun1Resample, sFilesNoiseResample];
-   
     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% ===== PRE-PROCESSING =====
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Process: Notch filter: 60Hz 120Hz 180Hz 240Hz 300Hz
     sFilesNotch = bst_process('CallProcess', 'process_notch', sFilesRawResample, [], ...
         'freqlist',    [60, 120, 180, 240], ...
@@ -187,7 +182,43 @@ if FLAG.HEADMODEL==1
         'copycond',       1, ...
         'copysubj',       0, ...
         'replacefile',    1);  % Replace
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% RELOAD SURFACE
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% ===== IMPORT SURFACES =====
+%     TessLhFile=['./result/',subjectName,'.L.midthickness.from32k.',kiloVertices,'.fs_LR.surf.gii'];
+%     TessRhFile=['./result/',subjectName,'.R.midthickness.from32k.',kiloVertices,'.fs_LR.surf.gii'];
+    TessLhFile=['F:\MEEGfMRI\Data\HCP_S900\105923\MEG\anatomy\105923.L.midthickness.4k_fs_LR.surf.gii'];
+    TessRhFile=['F:\MEEGfMRI\Data\HCP_S900\105923\MEG\anatomy\105923.R.midthickness.4k_fs_LR.surf.gii'];
+    
 
+    TessLhFile=fun_fullpath(TessLhFile);
+    TessRhFile=fun_fullpath(TessRhFile);
+
+    [sSubject, iSubject] = bst_get('Subject', subjectName);
+    % Left pial
+    [iLh, BstTessLhFile, nVertOrigL] = import_surfaces(iSubject, TessLhFile, 'GII-MNI', 0);
+    BstTessLhFile = BstTessLhFile{1};
+    % Right pial
+    [iRh, BstTessRhFile, nVertOrigR] = import_surfaces(iSubject, TessRhFile, 'GII-MNI', 0);
+    BstTessRhFile = BstTessRhFile{1};
+    
+    
+    %% ===== MERGE SURFACES =====
+    % Merge surfaces
+    origCortexFile = tess_concatenate({BstTessLhFile, BstTessRhFile}, sprintf('cortex_%dV', nVertOrigL + nVertOrigR), 'Cortex');
+    % Rename high-res file
+    origCortexFile = file_fullpath(origCortexFile);
+    CortexFile     = bst_fullfile(bst_fileparts(origCortexFile), 'tess_cortex_mid.mat');
+    file_move(origCortexFile, CortexFile);
+    % Keep relative path only
+    CortexFile = file_short(CortexFile);
+    % Delete original files
+    file_delete(file_fullpath({BstTessLhFile, BstTessRhFile}), 1);
+    % Reload subject
+    db_reload_subjects(iSubject);
+    
     %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Process: Generate BEM surfaces
     sBemSurf = bst_process('CallProcess', 'process_generate_bem', sFilesRest, [], ...
