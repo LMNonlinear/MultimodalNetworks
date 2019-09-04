@@ -2,6 +2,7 @@ close all;clear;clc;
 restoredefaultpath
 [~, hostname] = system('hostname');
 hostname=string(strtrim(hostname));
+%%
 switch hostname
     case 'KBOMATEBOOKXPRO'
         isDebug=1;
@@ -23,6 +24,16 @@ switch hostname
         %% directory parameter
         dataDir='F:\MEEGfMRI\Data\HCP_S900\';
         wb_command='D:\Software\workbench\workbench\bin_windows64\wb_command.exe';
+    case 'KBOITXPC'
+        isDebug=1;
+        %% barinstorm
+        addpath('D:\code\brainstorm\brainstorm_190820\brainstorm3')
+        addpath('.\function\')
+        addpath('.\external\')
+        brainstorm('setpath')
+        %% directory parameter
+        dataDir='E:\MEEGfMRI\Data\HCP_S900\';
+        wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
     case 'HPCwin'
         %% barinstorm
         addpath('E:\Rigel\codes\brainstorm\brainstorm3')
@@ -62,13 +73,13 @@ numVertices=2000;%number of vertices of hemisphere
 kiloVertices=[num2str(round(numVertices/1000)),'k'];
 %% file folder
 if exist('temp','dir')==0
-   mkdir('temp');
+    mkdir('temp');
 end
 if exist('result','dir')==0
-   mkdir('result');
+    mkdir('result');
 end
 if exist('figure','dir')==0
-   mkdir('figure');
+    mkdir('figure');
 end
 %% save
 filename = './temp/config.mat';
