@@ -35,6 +35,7 @@ switch hostname
         dataDir='E:\MEEGfMRI\Data\HCP_S900\';
         wb_command='D:\Software\workbench\bin_windows64\wb_command.exe';
     case 'HPCwin'
+        isDebug=1;
         %% barinstorm
         addpath('E:\Rigel\codes\brainstorm\brainstorm3')
         addpath('.\function\')

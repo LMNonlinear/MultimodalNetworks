@@ -17,14 +17,20 @@ end
 %% RELOAD SURFACE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [sSubject, iSubject] = bst_get('Subject', subjectName);
-%% Delete surfaces
+%% DELETE OLD ONE
+%Delete surfaces
 if ~isempty(sSubject.Surface)
     file_delete(file_fullpath({sSubject.Surface.FileName}), 1);
     sSubject.Surface(1:end) = [];
 end
-%% Empty defaults lists
+%Empty defaults lists
 sSubject.iCortex = [];
 sSubject.iScalp = [];
+% Update subject structure
+bst_set('Subject', iSubject, sSubject);
+panel_protocols('UpdateNode', 'Subject', iSubject);
+% Save database
+db_save();
 
 %% ===== IMPORT SURFACES =====
     TessLhFile=['./result/',subjectName,'.L.midthickness.from32k.',kiloVertices,'.fs_LR.surf.gii'];
